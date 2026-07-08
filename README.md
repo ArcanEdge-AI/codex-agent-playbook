@@ -15,6 +15,7 @@
 <p align="center">
   <a href="#install-with-one-prompt">Install</a> ·
   <a href="#quick-start">Quick Start</a> ·
+  <a href="#related-playbooks">Related Playbooks</a> ·
   <a href="#why-this-exists">Why This Exists</a> ·
   <a href="#whats-inside">What's Inside</a> ·
   <a href="#subagent-model">Subagent Model</a> ·
@@ -25,8 +26,14 @@
   <img src="https://img.shields.io/badge/Codex-Playbook-6E7BFF" alt="Codex Playbook" />
   <img src="https://img.shields.io/badge/Subagents-Orchestrated-00C2FF" alt="Subagents Orchestrated" />
   <img src="https://img.shields.io/badge/Instructions-Tool--Agnostic-8A5CFF" alt="Tool Agnostic" />
+  <a href="https://github.com/ArcanEdge-AI/claude-code-agent-playbook"><img src="https://img.shields.io/badge/Claude%20Code-Companion-D97706" alt="Claude Code companion playbook" /></a>
   <img src="https://img.shields.io/badge/License-MIT-2ECC71" alt="MIT License" />
   <img src="https://img.shields.io/badge/Status-Active-2ECC71" alt="Status Active" />
+</p>
+
+<p align="center">
+  <strong>Using Claude Code instead?</strong>
+  <a href="https://github.com/ArcanEdge-AI/claude-code-agent-playbook">Open the Claude Code Agent Playbook</a>.
 </p>
 
 ---
@@ -108,6 +115,19 @@ references/templates/repository-AGENTS.md
 ```
 
 Then fill in the actual build commands, test commands, architecture rules, generated-file rules, and release expectations for that repository.
+
+---
+
+## Related Playbooks
+
+This repository is the Codex-focused version of the playbook.
+
+| Agent environment | Repository | Use when |
+| --- | --- | --- |
+| Codex | `ArcanEdge-AI/codex-agent-playbook` | You want global Codex custom instructions, reference docs, skills, and subagent definitions. |
+| Claude Code | [`ArcanEdge-AI/claude-code-agent-playbook`](https://github.com/ArcanEdge-AI/claude-code-agent-playbook) | You want the companion setup tuned for Claude Code. |
+
+The philosophy is shared across both: the main agent acts as the senior engineer/orchestrator, subagents do bounded evidence-backed work, and final decisions stay with the main agent.
 
 ---
 
