@@ -45,6 +45,6 @@ Before opening a PR:
 - Confirm TOML examples are syntactically valid if you changed custom agents.
 - Confirm no sensitive or private material was added.
 
-## License Note
+## License
 
-No license has been selected yet. Do not add a license without an explicit maintainer decision.
+By contributing to this repository, you agree that your contribution will be licensed under the MIT License. See `LICENSE`.
