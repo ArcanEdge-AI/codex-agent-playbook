@@ -13,6 +13,7 @@
 </p>
 
 <p align="center">
+  <a href="#install-with-one-prompt">Install</a> ·
   <a href="#quick-start">Quick Start</a> ·
   <a href="#why-this-exists">Why This Exists</a> ·
   <a href="#whats-inside">What's Inside</a> ·
@@ -29,31 +30,75 @@
 
 ---
 
+## Install with One Prompt
+
+The easiest install path is to give this repo URL to your coding agent:
+
+```text
+Install this globally: https://github.com/ArcanEdge-AI/codex-agent-playbook
+
+Follow the repository's INSTALL.md exactly. Preserve my existing instructions, back up anything you change, install the global instructions, references, skills, and custom subagents where supported, then report the installed files and validation results.
+```
+
+That is the intended public experience: users should not need to understand the file layout before installation. The agent should read `INSTALL.md`, clone or fetch the repo, install into user-level Codex/agent configuration locations, validate the result, and report what changed.
+
+For users who already pasted the global instructions into Codex Personalization, use support-only mode:
+
+```text
+Install this in support-only mode: https://github.com/ArcanEdge-AI/codex-agent-playbook
+
+I already added the global custom instructions manually. Follow INSTALL.md, but do not duplicate the full instructions into AGENTS.md. Install references, skills, and custom subagents only.
+```
+
+---
+
 ## Quick Start
 
-Use this repo in two passes: first configure the main agent, then install the support system around it.
+### Agent install
 
-### 1. Add the global instructions
+Ask your coding agent to install the repo URL and follow `INSTALL.md`.
 
-Copy this file into **Codex Personalization → Custom instructions**:
+### Manual install: macOS / Linux / WSL
 
-```text
-custom-instructions/global-coding-agent-instructions.md
+```bash
+git clone https://github.com/ArcanEdge-AI/codex-agent-playbook.git
+cd codex-agent-playbook
+bash install/install.sh --full
 ```
 
-Those instructions teach the main agent to behave like a senior developer: understand before editing, plan non-trivial work, make surgical changes, validate honestly, and review its own work before final response.
+Support-only mode:
 
-### 2. Install the support system
-
-Open this prompt and run it in Codex:
-
-```text
-codex-prompts/setup-global-codex-support-system.md
+```bash
+bash install/install.sh --support-only
 ```
 
-That prompt creates a global support layer for reference docs, reusable skills, and custom subagents while avoiding duplicate global instructions.
+Dry run:
 
-### 3. Add repo-specific guidance
+```bash
+bash install/install.sh --full --dry-run
+```
+
+### Manual install: Windows PowerShell
+
+```powershell
+git clone https://github.com/ArcanEdge-AI/codex-agent-playbook.git
+cd codex-agent-playbook
+pwsh -ExecutionPolicy Bypass -File install/install.ps1 -Full
+```
+
+Support-only mode:
+
+```powershell
+pwsh -ExecutionPolicy Bypass -File install/install.ps1 -SupportOnly
+```
+
+Dry run:
+
+```powershell
+pwsh -ExecutionPolicy Bypass -File install/install.ps1 -Full -DryRun
+```
+
+### Repo-specific guidance
 
 Copy this template into individual projects as a starting point:
 
@@ -91,12 +136,30 @@ The intent is not to make the agent slower for its own sake. The intent is to ma
 
 | Area | Path | Purpose |
 | --- | --- | --- |
+| Install guide | `INSTALL.md` | Agent-readable install contract for one-prompt installation. |
+| Install scripts | `install/` | Manual installers for Unix-like shells and PowerShell. |
 | Global instructions | `custom-instructions/` | Tool-agnostic behavior rules for elegant, maintainable code. |
 | Setup prompt | `codex-prompts/` | Prompt for creating user-level references, skills, and subagents. |
 | Reference docs | `references/` | Routing, subagent delegation, and reusable project-doc templates. |
 | Skills | `skills/` | Reusable workflows for orchestration, doc routing, and senior review. |
 | Custom agents | `agents/` | Example subagent definitions for exploration, review, research, triage, and isolated implementation. |
 | Repo guidance | `AGENTS.md` | Instructions for maintaining this public playbook repository. |
+
+---
+
+## Install Modes
+
+### Full install
+
+Use this for most users.
+
+Full install writes the global instructions into the user's Codex home `AGENTS.md`, then installs references, skills, and custom subagents.
+
+### Support-only install
+
+Use this when the user already added the global instructions through Codex Personalization → Custom instructions.
+
+Support-only mode avoids duplicating the full instruction file and installs only the supporting reference docs, skills, and custom subagents.
 
 ---
 
@@ -172,6 +235,7 @@ references/subagents.md
 .
 ├── AGENTS.md
 ├── CONTRIBUTING.md
+├── INSTALL.md
 ├── README.md
 ├── assets/
 │   └── codex-agent-playbook-hero.png
@@ -185,6 +249,9 @@ references/subagents.md
 │   └── setup-global-codex-support-system.md
 ├── custom-instructions/
 │   └── global-coding-agent-instructions.md
+├── install/
+│   ├── install.ps1
+│   └── install.sh
 ├── references/
 │   ├── README.md
 │   ├── reference-doc-routing.md
@@ -243,8 +310,8 @@ The main agent still decides the design, applies or rejects recommendations, and
 ## Recommended Workflow
 
 ```text
-1. Paste the global custom instructions into Codex.
-2. Run the setup prompt to install references, skills, and subagent definitions.
+1. Ask your coding agent to install this repository URL.
+2. Let the installer configure global instructions, references, skills, and subagents.
 3. Add repo-specific AGENTS.md guidance to each project.
 4. For non-trivial work, let the main agent plan first.
 5. Delegate only bounded work with clear evidence requirements.
