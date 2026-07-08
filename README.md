@@ -25,6 +25,7 @@
   <img src="https://img.shields.io/badge/Codex-Playbook-6E7BFF" alt="Codex Playbook" />
   <img src="https://img.shields.io/badge/Subagents-Orchestrated-00C2FF" alt="Subagents Orchestrated" />
   <img src="https://img.shields.io/badge/Instructions-Tool--Agnostic-8A5CFF" alt="Tool Agnostic" />
+  <img src="https://img.shields.io/badge/License-MIT-2ECC71" alt="MIT License" />
   <img src="https://img.shields.io/badge/Status-Active-2ECC71" alt="Status Active" />
 </p>
 
@@ -236,6 +237,7 @@ references/subagents.md
 ├── AGENTS.md
 ├── CONTRIBUTING.md
 ├── INSTALL.md
+├── LICENSE
 ├── README.md
 ├── assets/
 │   └── codex-agent-playbook-hero.png
@@ -332,9 +334,7 @@ See `CONTRIBUTING.md` for contribution guidance.
 
 ## License
 
-No license has been selected yet.
-
-If you want others to freely use and fork this playbook, choose an explicit license. MIT is a common default for permissive open-source documentation and examples, but the repository owner should make that decision intentionally.
+MIT © 2026 ArcanEdge AI. See [`LICENSE`](./LICENSE).
 
 ---
 
