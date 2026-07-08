@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/codex-agent-playbook-hero.svg" alt="Codex Agent Playbook hero banner" width="100%" />
+  <img src="./assets/codex-agent-playbook-hero.png" alt="Codex Agent Playbook hero banner" width="100%" />
 </p>
 
 <h1 align="center">Codex Agent Playbook</h1>
@@ -174,7 +174,7 @@ references/subagents.md
 ├── CONTRIBUTING.md
 ├── README.md
 ├── assets/
-│   └── codex-agent-playbook-hero.svg
+│   └── codex-agent-playbook-hero.png
 ├── agents/
 │   ├── docs-researcher.toml
 │   ├── isolated-worker.toml
