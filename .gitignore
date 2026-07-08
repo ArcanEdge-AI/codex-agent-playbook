@@ -1,0 +1,16 @@
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Local scratch files
+*.tmp
+*.bak
+*.orig
+
+# Generated archives
+*.zip
+*.tar.gz
