@@ -25,11 +25,11 @@ $CODEX_HOME/
     reference-doc-routing.md
     templates/*.md
   agents/
-    read-only-explorer.toml
-    senior-reviewer.toml
-    docs-researcher.toml
-    test-triager.toml
-    isolated-worker.toml
+    planner.toml
+    engineer.toml
+    reviewer.toml
+    tester.toml
+    docs.toml
 
 $HOME/.agents/skills/
   subagent-orchestration/SKILL.md
@@ -123,7 +123,11 @@ After installation, verify:
 - `$CODEX_HOME/AGENTS.md` exists or was intentionally left as a pointer-only file.
 - `$CODEX_HOME/references/subagents.md` exists.
 - `$CODEX_HOME/references/reference-doc-routing.md` exists.
-- `$CODEX_HOME/agents/read-only-explorer.toml` exists.
+- `$CODEX_HOME/agents/planner.toml` exists.
+- `$CODEX_HOME/agents/engineer.toml` exists.
+- `$CODEX_HOME/agents/reviewer.toml` exists.
+- `$CODEX_HOME/agents/tester.toml` exists.
+- `$CODEX_HOME/agents/docs.toml` exists.
 - `$HOME/.agents/skills/subagent-orchestration/SKILL.md` exists.
 - Each `SKILL.md` has `name` and `description` frontmatter.
 - TOML agent files are parseable if a TOML parser is available.
@@ -136,11 +140,11 @@ To remove it manually, delete:
 
 ```text
 $CODEX_HOME/references/
-$CODEX_HOME/agents/read-only-explorer.toml
-$CODEX_HOME/agents/senior-reviewer.toml
-$CODEX_HOME/agents/docs-researcher.toml
-$CODEX_HOME/agents/test-triager.toml
-$CODEX_HOME/agents/isolated-worker.toml
+$CODEX_HOME/agents/planner.toml
+$CODEX_HOME/agents/engineer.toml
+$CODEX_HOME/agents/reviewer.toml
+$CODEX_HOME/agents/tester.toml
+$CODEX_HOME/agents/docs.toml
 $HOME/.agents/skills/subagent-orchestration/
 $HOME/.agents/skills/reference-doc-routing/
 $HOME/.agents/skills/senior-code-review/
