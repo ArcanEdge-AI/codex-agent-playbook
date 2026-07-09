@@ -146,9 +146,17 @@ else
 Supporting global reference documents live under the Codex home references directory:
 
 - `references/README.md` — map of available global reference docs
-- `references/subagents.md` — subagent delegation rules, assignment template, and acceptance checklist
+- `references/subagents.md` — subagent delegation rules, model selection guidance, assignment template, and acceptance checklist
 - `references/reference-doc-routing.md` — how to decide which docs to consult and how to treat them
 - `references/templates/` — templates for repository-level architecture, testing, access-control, design-system, release, API, and data-model docs
+
+Custom Codex subagents live under the Codex home agents directory:
+
+- `agents/planner.toml`
+- `agents/engineer.toml`
+- `agents/reviewer.toml`
+- `agents/tester.toml`
+- `agents/docs.toml`
 
 Reference documents are supporting context, not automatic truth. The main agent remains accountable for the final plan, final diff, validation, and final response.'
   append_section_if_missing "$TARGET_AGENTS_MD" "Global Reference Documents and Subagent Support" "$POINTER_BODY"
@@ -166,7 +174,11 @@ for path in \
   "$TARGET_AGENTS_MD" \
   "$CODEX_HOME/references/subagents.md" \
   "$CODEX_HOME/references/reference-doc-routing.md" \
-  "$CODEX_HOME/agents/read-only-explorer.toml" \
+  "$CODEX_HOME/agents/planner.toml" \
+  "$CODEX_HOME/agents/engineer.toml" \
+  "$CODEX_HOME/agents/reviewer.toml" \
+  "$CODEX_HOME/agents/tester.toml" \
+  "$CODEX_HOME/agents/docs.toml" \
   "$USER_SKILLS_HOME/subagent-orchestration/SKILL.md"; do
   if [[ -e "$path" || "$DRY_RUN" == "1" ]]; then
     say "OK: $path"
