@@ -13,23 +13,34 @@ The main agent owns:
 - validation strategy
 - final user-facing response
 
+## Codex Subagent Roles
+
+Use these five Codex subagent roles:
+
+| Subagent | Default mode | Best for |
+| --- | --- | --- |
+| `planner` | Read-only | Decomposing non-trivial tasks, identifying risks, sequencing work, and defining validation. |
+| `engineer` | Bounded write | Implementing small, well-scoped changes after the plan and constraints are clear. |
+| `reviewer` | Read-only | Reviewing diffs, designs, and implementations for correctness, risk, maintainability, and scope discipline. |
+| `tester` | Read-mostly | Reproducing failures, analyzing test output, finding validation gaps, and recommending targeted checks. |
+| `docs` | Read-only | Finding, interpreting, and summarizing relevant repo docs, reference docs, and authoritative external documentation. |
+
+The role names are intentionally simple. The main agent remains the senior engineer and orchestrator.
+
 ## When to Use Subagents
 
 Use subagents when delegation is likely to improve quality, speed, coverage, or context hygiene.
 
 Good uses include:
 
-- codebase exploration
-- tracing call paths
-- finding existing patterns
-- finding all call sites of an API, component, function, event, schema, or configuration
+- planning non-trivial or risky work
+- implementing a small isolated change after the main design is clear
 - reviewing a proposed diff
-- looking for bugs, regressions, safety risks, race conditions, test gaps, or maintainability issues
 - reproducing UI, integration, or workflow bugs
 - analyzing test failures, logs, snapshots, traces, or large files
 - checking framework, library, or API behavior against authoritative documentation
 - auditing many independent files or components
-- implementing a small isolated change after the main design is clear
+- finding existing patterns, call sites, APIs, components, functions, events, schemas, or configuration
 
 ## When Not to Use Subagents
 
@@ -43,9 +54,40 @@ Avoid subagents when:
 - the task involves sensitive access material, destructive operations, production-impacting changes, or sensitive data
 - the main agent cannot realistically verify the result
 
-Prefer read-only subagents for exploration, review, research, reproduction, and diagnosis.
+Prefer read-only subagents for planning, review, documentation lookup, reproduction, and diagnosis.
 
 Be careful with write-heavy parallel work. Do not allow multiple agents to edit the same files or tightly coupled areas at the same time unless the user explicitly asks and the conflict risk is acceptable.
+
+## Model Selection for Subagents
+
+When model selection is available, the main agent should right-size the model and reasoning effort for each delegated task.
+
+Use cheaper or faster models for bounded, low-risk, easily verifiable work, such as:
+
+- simple codebase lookup
+- file inventory
+- call-site enumeration
+- straightforward documentation lookup
+- formatting checks
+- mechanical audits
+- simple test-log summarization
+
+Use stronger reasoning models for work involving:
+
+- planning complex or multi-file work
+- implementation strategy
+- meaningful code review
+- ambiguous debugging
+- security-sensitive or access-control-sensitive review
+- data migrations
+- concurrency, caching, or background jobs
+- public API behavior
+- high-impact refactors
+- final review of meaningful changes
+
+The orchestrator remains accountable regardless of which model a subagent uses.
+
+Never delegate critical judgment to a weaker model unless the main agent can independently verify the result from primary evidence.
 
 ## Subagent Assignment Template
 
@@ -53,13 +95,16 @@ Use this structure when delegating:
 
 ```text
 Role:
-You are the [role] subagent for this task.
+You are the [planner/engineer/reviewer/tester/docs] subagent for this task.
 
 Goal:
 [One concrete outcome.]
 
 Context:
 [Relevant user request, repository constraints, current findings, and branch/diff context.]
+
+Model / reasoning guidance:
+Use [cheaper/faster/standard/stronger] model because [why]. Escalate if the task becomes ambiguous, high-risk, or impossible to verify.
 
 Reference documents:
 Consult [document/path/section] for context on [topic].
@@ -103,13 +148,3 @@ Before accepting subagent work, the main agent must verify:
 If subagent findings conflict, resolve the disagreement by inspecting primary evidence.
 
 Never accept a subagent's conclusion solely because it sounds confident.
-
-## Useful Subagent Roles
-
-Suggested roles:
-
-- Read-Only Explorer: maps code paths, call sites, invariants, ownership boundaries, and likely insertion points.
-- Senior Reviewer: reviews diffs for correctness, regressions, safety risks, test gaps, maintainability, and scope creep.
-- Docs Researcher: verifies framework, library, API, or platform behavior against authoritative docs.
-- Test Triager: analyzes failing tests, logs, flakes, snapshots, and likely root causes.
-- Isolated Worker: implements small, bounded changes only after scope and design are clear.
