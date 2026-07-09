@@ -55,8 +55,6 @@ function Copy-PlaybookTree {
   }
 
   Get-ChildItem -LiteralPath $SourceDir -Recurse -File | ForEach-Object {
-    $Rel = Resolve-Path -Relative $_.FullName
-    $Prefix = Resolve-Path -Relative $SourceDir
     $RelativePath = $_.FullName.Substring((Resolve-Path $SourceDir).Path.Length).TrimStart('\','/')
     $Dest = Join-Path $DestinationDir $RelativePath
     Copy-PlaybookFile $_.FullName $Dest
@@ -127,9 +125,17 @@ The primary global coding-agent behavior may be configured in Codex Personalizat
 Supporting global reference documents live under the Codex home references directory:
 
 - `references/README.md` — map of available global reference docs
-- `references/subagents.md` — subagent delegation rules, assignment template, and acceptance checklist
+- `references/subagents.md` — subagent delegation rules, model selection guidance, assignment template, and acceptance checklist
 - `references/reference-doc-routing.md` — how to decide which docs to consult and how to treat them
 - `references/templates/` — templates for repository-level architecture, testing, access-control, design-system, release, API, and data-model docs
+
+Custom Codex subagents live under the Codex home agents directory:
+
+- `agents/planner.toml`
+- `agents/engineer.toml`
+- `agents/reviewer.toml`
+- `agents/tester.toml`
+- `agents/docs.toml`
 
 Reference documents are supporting context, not automatic truth. The main agent remains accountable for the final plan, final diff, validation, and final response.
 "@
@@ -146,7 +152,11 @@ $CheckPaths = @(
   $TargetAgentsMd,
   (Join-Path $CodexHome "references\subagents.md"),
   (Join-Path $CodexHome "references\reference-doc-routing.md"),
-  (Join-Path $CodexHome "agents\read-only-explorer.toml"),
+  (Join-Path $CodexHome "agents\planner.toml"),
+  (Join-Path $CodexHome "agents\engineer.toml"),
+  (Join-Path $CodexHome "agents\reviewer.toml"),
+  (Join-Path $CodexHome "agents\tester.toml"),
+  (Join-Path $CodexHome "agents\docs.toml"),
   (Join-Path $UserSkillsHome "subagent-orchestration\SKILL.md")
 )
 
