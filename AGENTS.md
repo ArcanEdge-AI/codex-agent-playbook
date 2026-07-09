@@ -11,6 +11,7 @@ Repository-specific guidance overrides the global instructions where it is more 
 - Keep repository-specific, machine-specific, and workflow-specific details out of global instructions.
 - Prefer concise, practical guidance over long theory.
 - Make the main agent accountable for planning, delegation, validation, and final reporting.
+- Keep the Codex subagent model aligned around `planner`, `engineer`, `reviewer`, `tester`, and `docs`.
 
 ## Content Rules
 
@@ -28,7 +29,8 @@ This repo is mostly Markdown and TOML. Before finalizing meaningful changes:
 - Confirm TOML files are syntactically valid when a TOML parser is available.
 - Confirm each `SKILL.md` has YAML frontmatter with `name` and `description`.
 - Confirm links and paths in `README.md` match the repository tree.
+- Confirm install docs and scripts reference the current Codex agent files.
 
 ## License
 
-No license has been selected yet. Do not add a license unless the user explicitly chooses one.
+This repository is MIT licensed. See `LICENSE`.
