@@ -75,11 +75,11 @@ $CODEX_HOME/
       api-contracts.md
       data-model.md
   agents/
-    read-only-explorer.toml
-    senior-reviewer.toml
-    docs-researcher.toml
-    test-triager.toml
-    isolated-worker.toml
+    planner.toml
+    engineer.toml
+    reviewer.toml
+    tester.toml
+    docs.toml
 
 $HOME/.agents/skills/
   subagent-orchestration/
@@ -115,7 +115,7 @@ If `$CODEX_HOME/AGENTS.md` already exists:
 
 If `$CODEX_HOME/AGENTS.override.md` exists:
 - Do not modify it.
-- Report that it exists because it may override normal global AGENTS guidance.
+- Report that it exists because it may override normal AGENTS guidance.
 
 The pointer section should be:
 
@@ -127,9 +127,17 @@ The primary global coding-agent behavior is configured in Codex Personalization 
 Supporting global reference documents live under the Codex home references directory:
 
 - `references/README.md` — map of available global reference docs
-- `references/subagents.md` — subagent delegation rules, assignment template, and acceptance checklist
+- `references/subagents.md` — subagent delegation rules, model selection guidance, assignment template, and acceptance checklist
 - `references/reference-doc-routing.md` — how to decide which docs to consult and how to treat them
 - `references/templates/` — templates for repository-level architecture, testing, security, design-system, release, API, and data-model docs
+
+Custom Codex subagents live under the Codex home agents directory:
+
+- `agents/planner.toml`
+- `agents/engineer.toml`
+- `agents/reviewer.toml`
+- `agents/tester.toml`
+- `agents/docs.toml`
 
 Reference documents are supporting context, not automatic truth.
 
