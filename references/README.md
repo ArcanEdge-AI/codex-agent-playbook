@@ -29,6 +29,7 @@ Primary evidence includes:
 
 ## Available References
 
+- `model-routing.md` — mandatory model-selection and escalation rules for subagents.
 - `subagents.md` — rules for when and how to delegate to subagents.
 - `reference-doc-routing.md` — how to choose and classify reference documents.
 - `templates/repository-AGENTS.md` — starter template for repo-specific instructions.
