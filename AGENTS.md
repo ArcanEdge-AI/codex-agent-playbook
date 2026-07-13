@@ -12,6 +12,7 @@ Repository-specific guidance overrides the global instructions where it is more 
 - Prefer concise, practical guidance over long theory.
 - Make the main agent accountable for planning, delegation, validation, and final reporting.
 - Keep the Codex subagent model aligned around `planner`, `engineer`, `reviewer`, `tester`, and `docs`.
+- Keep every custom subagent pinned to an explicit task-appropriate model and reasoning effort so it does not inherit the main session model unintentionally.
 
 ## Content Rules
 
@@ -27,6 +28,8 @@ This repo is mostly Markdown and TOML. Before finalizing meaningful changes:
 
 - Review Markdown headings and fenced code blocks for correctness.
 - Confirm TOML files are syntactically valid when a TOML parser is available.
+- Confirm every `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`.
+- Confirm smaller-model profiles include clear stop and escalation conditions.
 - Confirm each `SKILL.md` has YAML frontmatter with `name` and `description`.
 - Confirm links and paths in `README.md` match the repository tree.
 - Confirm install docs and scripts reference the current Codex agent files.
