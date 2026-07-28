@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  Configure Codex to behave less like a loose autocomplete engine and more like a disciplined senior engineer: plan clearly, change surgically, delegate carefully, verify honestly, and ship maintainable code.
+  Configure Codex to behave less like a loose autocomplete engine and more like a disciplined senior engineer: plan clearly, change surgically, delegate carefully, coordinate parallel work, verify honestly, and ship maintainable code.
 </p>
 
 <p align="center">
@@ -19,13 +19,15 @@
   <a href="#why-this-exists">Why This Exists</a> ·
   <a href="#whats-inside">What's Inside</a> ·
   <a href="#subagent-model">Subagent Model</a> ·
+  <a href="#coordinating-parallel-codex-threads">Parallel Threads</a> ·
   <a href="#repository-structure">Structure</a>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Codex-Playbook-6E7BFF" alt="Codex Playbook" />
   <img src="https://img.shields.io/badge/Subagents-Orchestrated-00C2FF" alt="Subagents Orchestrated" />
-  <img src="https://img.shields.io/badge/Instructions-Tool--Agnostic-8A5CFF" alt="Tool Agnostic" />
+  <img src="https://img.shields.io/badge/Threads-Coordinated-4ECDC4" alt="Threads Coordinated" />
+  <img src="https://img.shields.io/badge/Instructions-Tool--Agnostic-8A5CFF" alt="Instructions Tool Agnostic" />
   <a href="https://github.com/ArcanEdge-AI/claude-code-agent-playbook"><img src="https://img.shields.io/badge/Claude%20Code-Companion-D97706" alt="Claude Code companion playbook" /></a>
   <img src="https://img.shields.io/badge/License-MIT-2ECC71" alt="MIT License" />
   <img src="https://img.shields.io/badge/Status-Active-2ECC71" alt="Status Active" />
@@ -127,7 +129,7 @@ This repository is the Codex-focused version of the playbook.
 | Codex | `ArcanEdge-AI/codex-agent-playbook` | You want global Codex custom instructions, reference docs, skills, and subagent definitions. |
 | Claude Code | [`ArcanEdge-AI/claude-code-agent-playbook`](https://github.com/ArcanEdge-AI/claude-code-agent-playbook) | You want the companion setup tuned for Claude Code. |
 
-The philosophy is shared across both: the main agent acts as the senior engineer/orchestrator, subagents do bounded evidence-backed work, and final decisions stay with the main agent.
+The philosophy is shared across both: the main agent acts as the senior engineer/orchestrator, subagents do bounded evidence-backed work, independent project threads are coordinated explicitly, and final decisions stay with the main agent.
 
 ---
 
@@ -141,6 +143,7 @@ AI coding agents are powerful, but they often fail in predictable ways:
 - They trust editor diagnostics over real builds.
 - They claim tests passed when they did not run them.
 - They delegate poorly or blindly accept subagent output.
+- They allow parallel features to develop incompatible contracts or ownership.
 - They turn every task into a context dump instead of a focused engineering loop.
 
 This playbook gives Codex a durable operating model:
@@ -149,7 +152,7 @@ This playbook gives Codex a durable operating model:
 Understand → Plan → Implement → Verify → Review → Report
 ```
 
-The intent is not to make the agent slower for its own sake. The intent is to make it **less wrong**, especially on real repositories with existing conventions and local changes.
+The intent is not to make the agent slower for its own sake. The intent is to make it **less wrong**, especially on real repositories with existing conventions, local changes, and concurrent work.
 
 ---
 
@@ -160,9 +163,9 @@ The intent is not to make the agent slower for its own sake. The intent is to ma
 | Install guide | `INSTALL.md` | Agent-readable install contract for one-prompt installation. |
 | Install scripts | `install/` | Manual installers for Unix-like shells and PowerShell. |
 | Global instructions | `custom-instructions/` | Tool-agnostic behavior rules for elegant, maintainable code. |
-| Setup prompt | `codex-prompts/` | Prompt for creating user-level references, skills, and subagents. |
-| Reference docs | `references/` | Routing, subagent delegation, and reusable project-doc templates. |
-| Skills | `skills/` | Reusable workflows for orchestration, doc routing, and senior review. |
+| Prompts | `codex-prompts/` | Setup and active-project coordination prompts. |
+| Reference docs | `references/` | Model routing, subagent delegation, multi-session coordination, document routing, and reusable project-doc templates. |
+| Skills | `skills/` | Reusable workflows for orchestration, multi-session coordination, doc routing, and senior review. |
 | Custom agents | `agents/` | Codex subagent definitions for planning, engineering, review, testing, and documentation. |
 | Repo guidance | `AGENTS.md` | Instructions for maintaining this public playbook repository. |
 
@@ -194,14 +197,15 @@ It owns:
 - the working plan
 - architecture and design judgment
 - delegation decisions
+- parallel-work coordination
 - final implementation
 - final diff
 - validation strategy
 - final response
 
-Subagents can help, but they do not own the outcome. Their job is to return bounded findings with evidence. The main agent must verify before accepting.
+Subagents can help, but they do not own the outcome. Their job is to return bounded findings with evidence. Independent project threads may own separate workstreams, but the main coordinating agent still owns compatibility and integration decisions.
 
-> Use subagents when they create leverage. Do not use them just because they are available.
+> Use subagents and parallel threads when they create leverage. Do not use them just because they are available.
 
 ---
 
@@ -217,7 +221,7 @@ This playbook uses five Codex subagent roles that mirror a practical software de
 | `tester` | Read-mostly | Reproducing failures, analyzing test output, finding validation gaps, and recommending targeted checks. |
 | `docs` | Read-only | Finding, interpreting, and summarizing relevant repo docs, reference docs, and authoritative external documentation. |
 
-When model selection is available, the orchestrator should right-size the model for each subagent task. Use cheaper or faster models for bounded, low-risk, easily verifiable work. Use stronger reasoning models for planning, implementation strategy, meaningful review, ambiguous debugging, security-sensitive work, and high-impact changes.
+The bundled profiles explicitly pin a task-sized supporting model and role-appropriate reasoning effort instead of inheriting the main session model. Consult `references/model-routing.md` for mandatory selection, escalation, and acceptance rules.
 
 The delegation rule is simple:
 
@@ -225,7 +229,60 @@ The delegation rule is simple:
 Precise assignment → Evidence-backed output → Main-agent verification → Accept or reject
 ```
 
-A good subagent prompt includes role, goal, context, model/reasoning guidance, scope, non-goals, permissions, required evidence, output format, and stop conditions.
+A good subagent prompt includes role, goal, context, selected profile or model, reasoning effort, scope, non-goals, permissions, required evidence, escalation conditions, output format, and stop conditions.
+
+---
+
+## Coordinating Parallel Codex Threads
+
+Subagents are delegated from one main thread. Independent Codex threads may already have separate plans, branches, worktrees, assumptions, and implementation ownership.
+
+Use the multi-session coordination workflow when related project work is happening in parallel:
+
+```text
+Current project
+    ↓
+Threads active within the previous 72 hours
+    ↓
+Branches, worktrees, pull requests, and unmerged changes
+    ↓
+Shared change map and conflict detection
+    ↓
+Ownership, sequencing, and integration verification
+```
+
+Repository state takes precedence over recency. Older work still matters when it remains unmerged, incomplete, blocked, contract-relevant, or otherwise active.
+
+New project threads should use this naming format:
+
+```text
+Project - Three-to-Four-Word Description
+```
+
+Examples:
+
+```text
+ArcLedger - Validate Billing Evidence
+LoreBound - Implement Campaign Imports
+```
+
+The project name should be detected automatically, and the description should be derived from the primary objective. The square brackets used when explaining the format are not part of the actual title.
+
+Start the workflow with:
+
+```text
+codex-prompts/coordinate-active-project-work.md
+```
+
+Supporting files:
+
+```text
+references/multi-session-coordination.md
+references/templates/active-work-record.md
+skills/multi-session-coordination/SKILL.md
+```
+
+The optional active-work record gives repositories a local fallback when direct sibling-thread discovery is unavailable. It is advisory and must be verified against current repository evidence.
 
 ---
 
@@ -238,7 +295,7 @@ The main agent should:
 1. Identify which docs matter for the task.
 2. Read only relevant sections when possible.
 3. Classify docs as authoritative, advisory, or historical.
-4. Pass only relevant context to subagents.
+4. Pass only relevant context to subagents or active project threads.
 5. Resolve conflicts using primary evidence.
 
 Primary evidence includes current code, tests, schemas, configuration, logs, build output, typecheck output, runtime behavior, and authoritative external documentation.
@@ -246,8 +303,10 @@ Primary evidence includes current code, tests, schemas, configuration, logs, bui
 See:
 
 ```text
+references/model-routing.md
 references/reference-doc-routing.md
 references/subagents.md
+references/multi-session-coordination.md
 ```
 
 ---
@@ -270,6 +329,7 @@ references/subagents.md
 │   ├── reviewer.toml
 │   └── tester.toml
 ├── codex-prompts/
+│   ├── coordinate-active-project-work.md
 │   └── setup-global-codex-support-system.md
 ├── custom-instructions/
 │   └── global-coding-agent-instructions.md
@@ -278,9 +338,12 @@ references/subagents.md
 │   └── install.sh
 ├── references/
 │   ├── README.md
+│   ├── model-routing.md
+│   ├── multi-session-coordination.md
 │   ├── reference-doc-routing.md
 │   ├── subagents.md
 │   └── templates/
+│       ├── active-work-record.md
 │       ├── api-contracts.md
 │       ├── architecture.md
 │       ├── data-model.md
@@ -290,6 +353,8 @@ references/subagents.md
 │       ├── security.md
 │       └── testing.md
 └── skills/
+    ├── multi-session-coordination/
+    │   └── SKILL.md
     ├── reference-doc-routing/
     │   └── SKILL.md
     ├── senior-code-review/
@@ -338,8 +403,9 @@ The main agent still decides the design, applies or rejects recommendations, and
 2. Let the installer configure global instructions, references, skills, and subagents.
 3. Add repo-specific AGENTS.md guidance to each project.
 4. For non-trivial work, let the main agent plan first.
-5. Delegate only bounded work with clear evidence requirements.
-6. Verify the final diff before accepting completion.
+5. Delegate only bounded work with clear evidence requirements and explicit model routing.
+6. When independent project threads run in parallel, use the multi-session coordination skill.
+7. Verify the final combined diff before accepting completion.
 ```
 
 ---
