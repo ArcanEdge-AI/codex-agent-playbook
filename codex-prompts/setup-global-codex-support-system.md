@@ -7,14 +7,15 @@ You are configuring my global Codex support system.
 
 Important context:
 I have already added my full global coding-agent instructions in Codex Personalization > Custom instructions. Treat that as true even if you cannot inspect the UI.
-
 Do not duplicate those full instructions into `AGENTS.md`.
 
 Your job is to create the supporting global reference system only:
 
 - global reference documents
 - reference document routing docs
+- subagent model-routing docs
 - subagent delegation docs
+- multi-session coordination docs
 - reusable skills, if supported
 - global custom subagent definitions, if supported
 - a small pointer section in `$CODEX_HOME/AGENTS.md` only if helpful
@@ -50,7 +51,7 @@ Before writing anything:
 5. If a file already exists, prefer a careful merge/update over replacement.
 6. If replacement is necessary, create a timestamped backup next to the file.
 7. Do not store sensitive access material, private local paths, or long incident logs.
-8. Keep everything tool-agnostic.
+8. Keep everything tool-agnostic except where a Codex-specific workflow is explicitly documented in a skill or reference.
 9. Do not mention issue-tracker-specific review mechanics, repo-specific workflows, local machine quirks, or project names.
 10. Do not ask me questions unless you are blocked. Make reasonable assumptions and report them.
 
@@ -63,7 +64,9 @@ $CODEX_HOME/
   AGENTS.md
   references/
     README.md
+    model-routing.md
     subagents.md
+    multi-session-coordination.md
     reference-doc-routing.md
     templates/
       repository-AGENTS.md
@@ -74,6 +77,7 @@ $CODEX_HOME/
       release.md
       api-contracts.md
       data-model.md
+      active-work-record.md
   agents/
     planner.toml
     engineer.toml
@@ -83,6 +87,8 @@ $CODEX_HOME/
 
 $HOME/.agents/skills/
   subagent-orchestration/
+    SKILL.md
+  multi-session-coordination/
     SKILL.md
   reference-doc-routing/
     SKILL.md
@@ -127,9 +133,18 @@ The primary global coding-agent behavior is configured in Codex Personalization 
 Supporting global reference documents live under the Codex home references directory:
 
 - `references/README.md` — map of available global reference docs
-- `references/subagents.md` — subagent delegation rules, model selection guidance, assignment template, and acceptance checklist
+- `references/model-routing.md` — mandatory subagent model-selection, escalation, and acceptance rules
+- `references/subagents.md` — subagent delegation rules, assignment template, and acceptance checklist
+- `references/multi-session-coordination.md` — discovery, thread naming, ownership, sequencing, conflict detection, and integration guidance for independent project threads
 - `references/reference-doc-routing.md` — how to decide which docs to consult and how to treat them
-- `references/templates/` — templates for repository-level architecture, testing, security, design-system, release, API, and data-model docs
+- `references/templates/` — templates for repository-level architecture, testing, security, design-system, release, API, data-model, and active-work docs
+
+Reusable skills live under the user skills directory, including:
+
+- `subagent-orchestration`
+- `multi-session-coordination`
+- `reference-doc-routing`
+- `senior-code-review`
 
 Custom Codex subagents live under the Codex home agents directory:
 
@@ -143,7 +158,7 @@ Reference documents are supporting context, not automatic truth.
 
 The main agent must verify implementation-relevant claims against primary evidence such as current code, tests, schemas, configuration, logs, build output, typecheck output, runtime behavior, and authoritative external documentation.
 
-When delegating to subagents, the main agent should pass only relevant reference document names, paths, or sections. Do not dump large documents into subagent prompts unless necessary.
+When delegating to subagents or coordinating independent threads, the main agent should pass only relevant reference document names, paths, or sections. Do not dump large documents into prompts unless necessary.
 
 The main agent remains accountable for the final plan, final diff, validation, and final response.
 ```
@@ -155,7 +170,9 @@ If adding this to an existing `AGENTS.md`, use the heading `## Global Reference 
 Use the contents from this repository as the canonical source for:
 
 - `references/README.md`
+- `references/model-routing.md`
 - `references/subagents.md`
+- `references/multi-session-coordination.md`
 - `references/reference-doc-routing.md`
 - `references/templates/*.md`
 - `skills/*/SKILL.md`
@@ -171,11 +188,13 @@ After creating or updating files:
 2. Confirm no repository files were modified.
 3. Confirm whether `$CODEX_HOME/AGENTS.override.md` exists and may override `$CODEX_HOME/AGENTS.md`.
 4. Validate TOML custom agent files if a TOML parser is available.
-5. Validate that each `SKILL.md` has frontmatter with `name` and `description`.
-6. Report any files backed up.
-7. Report any files skipped and why.
-8. Report any assumptions.
-9. Report whether the small `AGENTS.md` pointer section was created, updated, already present, or skipped.
+5. Confirm every installed custom-agent TOML explicitly defines `model` and `model_reasoning_effort`.
+6. Validate that each `SKILL.md` has frontmatter with `name` and `description`.
+7. Confirm `references/model-routing.md`, `references/multi-session-coordination.md`, `references/templates/active-work-record.md`, and `skills/multi-session-coordination/SKILL.md` were installed when supported.
+8. Report any files backed up.
+9. Report any files skipped and why.
+10. Report any assumptions.
+11. Report whether the small `AGENTS.md` pointer section was created, updated, already present, or skipped.
 
 Final response format:
 
