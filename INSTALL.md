@@ -21,9 +21,13 @@ $CODEX_HOME/
   AGENTS.md
   references/
     README.md
+    model-routing.md
     subagents.md
+    multi-session-coordination.md
     reference-doc-routing.md
-    templates/*.md
+    templates/
+      active-work-record.md
+      *.md
   agents/
     planner.toml
     engineer.toml
@@ -33,6 +37,7 @@ $CODEX_HOME/
 
 $HOME/.agents/skills/
   subagent-orchestration/SKILL.md
+  multi-session-coordination/SKILL.md
   reference-doc-routing/SKILL.md
   senior-code-review/SKILL.md
 ```
@@ -121,14 +126,19 @@ Do not modify arbitrary repositories during installation. Only use a temporary c
 After installation, verify:
 
 - `$CODEX_HOME/AGENTS.md` exists or was intentionally left as a pointer-only file.
+- `$CODEX_HOME/references/model-routing.md` exists.
 - `$CODEX_HOME/references/subagents.md` exists.
+- `$CODEX_HOME/references/multi-session-coordination.md` exists.
 - `$CODEX_HOME/references/reference-doc-routing.md` exists.
+- `$CODEX_HOME/references/templates/active-work-record.md` exists.
 - `$CODEX_HOME/agents/planner.toml` exists.
 - `$CODEX_HOME/agents/engineer.toml` exists.
 - `$CODEX_HOME/agents/reviewer.toml` exists.
 - `$CODEX_HOME/agents/tester.toml` exists.
 - `$CODEX_HOME/agents/docs.toml` exists.
+- Every installed `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`.
 - `$HOME/.agents/skills/subagent-orchestration/SKILL.md` exists.
+- `$HOME/.agents/skills/multi-session-coordination/SKILL.md` exists.
 - Each `SKILL.md` has `name` and `description` frontmatter.
 - TOML agent files are parseable if a TOML parser is available.
 
@@ -146,6 +156,7 @@ $CODEX_HOME/agents/reviewer.toml
 $CODEX_HOME/agents/tester.toml
 $CODEX_HOME/agents/docs.toml
 $HOME/.agents/skills/subagent-orchestration/
+$HOME/.agents/skills/multi-session-coordination/
 $HOME/.agents/skills/reference-doc-routing/
 $HOME/.agents/skills/senior-code-review/
 ```

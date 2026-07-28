@@ -23,6 +23,9 @@ Do not use this skill when:
 - requirements are materially unclear
 - subagents would edit the same files
 - the main agent cannot verify the result
+- multiple independent Codex threads are already implementing related work
+
+When multiple independent project threads need conflict detection, ownership, sequencing, or integration guidance, use the `multi-session-coordination` skill instead. Do not spawn additional implementation agents to solve an existing parallel-work conflict.
 
 ## Mandatory Model Routing
 

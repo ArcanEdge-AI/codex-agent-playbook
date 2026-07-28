@@ -125,9 +125,18 @@ The primary global coding-agent behavior may be configured in Codex Personalizat
 Supporting global reference documents live under the Codex home references directory:
 
 - `references/README.md` — map of available global reference docs
-- `references/subagents.md` — subagent delegation rules, model selection guidance, assignment template, and acceptance checklist
+- `references/model-routing.md` — mandatory subagent model-selection, escalation, and acceptance rules
+- `references/subagents.md` — subagent delegation rules, assignment template, and acceptance checklist
+- `references/multi-session-coordination.md` — discovery, thread naming, ownership, sequencing, conflict detection, and integration guidance for independent project threads
 - `references/reference-doc-routing.md` — how to decide which docs to consult and how to treat them
-- `references/templates/` — templates for repository-level architecture, testing, access-control, design-system, release, API, and data-model docs
+- `references/templates/` — templates for repository-level architecture, testing, access-control, design-system, release, API, data-model, and active-work docs
+
+Reusable skills live under the user skills directory, including:
+
+- `subagent-orchestration`
+- `multi-session-coordination`
+- `reference-doc-routing`
+- `senior-code-review`
 
 Custom Codex subagents live under the Codex home agents directory:
 
@@ -150,14 +159,18 @@ Write-Step ""
 Write-Step "Validation:"
 $CheckPaths = @(
   $TargetAgentsMd,
+  (Join-Path $CodexHome "references\model-routing.md"),
   (Join-Path $CodexHome "references\subagents.md"),
+  (Join-Path $CodexHome "references\multi-session-coordination.md"),
   (Join-Path $CodexHome "references\reference-doc-routing.md"),
+  (Join-Path $CodexHome "references\templates\active-work-record.md"),
   (Join-Path $CodexHome "agents\planner.toml"),
   (Join-Path $CodexHome "agents\engineer.toml"),
   (Join-Path $CodexHome "agents\reviewer.toml"),
   (Join-Path $CodexHome "agents\tester.toml"),
   (Join-Path $CodexHome "agents\docs.toml"),
-  (Join-Path $UserSkillsHome "subagent-orchestration\SKILL.md")
+  (Join-Path $UserSkillsHome "subagent-orchestration\SKILL.md"),
+  (Join-Path $UserSkillsHome "multi-session-coordination\SKILL.md")
 )
 
 foreach ($Path in $CheckPaths) {

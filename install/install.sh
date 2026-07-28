@@ -146,9 +146,18 @@ else
 Supporting global reference documents live under the Codex home references directory:
 
 - `references/README.md` — map of available global reference docs
-- `references/subagents.md` — subagent delegation rules, model selection guidance, assignment template, and acceptance checklist
+- `references/model-routing.md` — mandatory subagent model-selection, escalation, and acceptance rules
+- `references/subagents.md` — subagent delegation rules, assignment template, and acceptance checklist
+- `references/multi-session-coordination.md` — discovery, thread naming, ownership, sequencing, conflict detection, and integration guidance for independent project threads
 - `references/reference-doc-routing.md` — how to decide which docs to consult and how to treat them
-- `references/templates/` — templates for repository-level architecture, testing, access-control, design-system, release, API, and data-model docs
+- `references/templates/` — templates for repository-level architecture, testing, access-control, design-system, release, API, data-model, and active-work docs
+
+Reusable skills live under the user skills directory, including:
+
+- `subagent-orchestration`
+- `multi-session-coordination`
+- `reference-doc-routing`
+- `senior-code-review`
 
 Custom Codex subagents live under the Codex home agents directory:
 
@@ -172,14 +181,18 @@ say "Validation:"
 
 for path in \
   "$TARGET_AGENTS_MD" \
+  "$CODEX_HOME/references/model-routing.md" \
   "$CODEX_HOME/references/subagents.md" \
+  "$CODEX_HOME/references/multi-session-coordination.md" \
   "$CODEX_HOME/references/reference-doc-routing.md" \
+  "$CODEX_HOME/references/templates/active-work-record.md" \
   "$CODEX_HOME/agents/planner.toml" \
   "$CODEX_HOME/agents/engineer.toml" \
   "$CODEX_HOME/agents/reviewer.toml" \
   "$CODEX_HOME/agents/tester.toml" \
   "$CODEX_HOME/agents/docs.toml" \
-  "$USER_SKILLS_HOME/subagent-orchestration/SKILL.md"; do
+  "$USER_SKILLS_HOME/subagent-orchestration/SKILL.md" \
+  "$USER_SKILLS_HOME/multi-session-coordination/SKILL.md"; do
   if [[ -e "$path" || "$DRY_RUN" == "1" ]]; then
     say "OK: $path"
   else
