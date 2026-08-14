@@ -119,7 +119,8 @@ if ($Mode -eq "full") {
     Copy-PlaybookFile $GlobalInstructions $TargetAgentsMd
   }
 } else {
-  $PointerBody = @"
+  # Keep Markdown backticks literal; expandable here-strings treat them as PowerShell escapes.
+  $PointerBody = @'
 The primary global coding-agent behavior may be configured in Codex Personalization > Custom instructions or in this AGENTS.md file.
 
 Supporting global reference documents live under the Codex home references directory:
@@ -148,7 +149,7 @@ Custom Codex subagents live under the Codex home agents directory:
 - `agents/docs.toml`
 
 Reference documents are supporting context, not automatic truth. The main agent remains accountable for the final plan, final diff, validation, and final response.
-"@
+'@
   Append-SectionIfMissing $TargetAgentsMd "Global Reference Documents and Subagent Support" $PointerBody
 }
 
