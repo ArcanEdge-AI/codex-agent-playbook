@@ -79,6 +79,10 @@ notes: >-
 
 ## Maintenance Rules
 
+- Use `dependencies` for identifiers of required upstream work artifacts or decisions, not package dependencies.
+- Use `blocked_by` for dependencies or blockers that are currently unmet.
+- Treat `owned_paths` as write ownership; `shared_paths` identifies coordination surfaces, not permission for concurrent edits.
+- Treat `validation_required` as the handoff and integration gates that must pass before marking work `integration-ready`.
 - Keep the record current while the work remains active.
 - Use repository-relative paths.
 - Keep `thread_title` aligned with the naming standard for newly created threads.

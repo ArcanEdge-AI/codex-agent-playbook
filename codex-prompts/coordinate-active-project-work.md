@@ -17,6 +17,8 @@ When direct thread discovery is unavailable, inspect branches, worktrees, pull r
 
 Build a shared change map and identify conflicts across files, architecture, APIs, events, schemas, migrations, shared types, dependencies, authentication, user flows, and tests. Do not limit the review to Git merge conflicts.
 
+For each dependency, distinguish a software or service dependency from an accepted upstream work artifact or decision. Identify unmet blockers, handoff and integration verification gates, and the remaining chain of blocking work that controls integration completion.
+
 Assign clear ownership for shared areas, recommend the safest implementation order, identify work that should continue or pause, and provide copy-ready instructions for each active thread.
 
 Return:

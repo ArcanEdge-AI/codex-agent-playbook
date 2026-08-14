@@ -50,9 +50,11 @@ The plan should describe:
 - assumptions that materially affect behavior, API, data, safety, persistence, performance, accessibility, or user-visible output
 - any step that may benefit from subagent delegation
 
+For work with multiple delegable parts, also identify bounded work items, the artifacts each item consumes and produces, and only the dependencies that truly prevent another item from starting. Identify the completion-controlling path: the chain of required handoffs that determines when the combined work can finish. Keep this lightweight; do not require graph modeling for trivial or single-threaded work.
+
 Use whatever planning mechanism the environment provides. Do not assume a specific issue tracker, planning tool, CLI, MCP server, UI feature, or external system.
 
-Execute the plan sequentially unless the user explicitly asks for parallel work or the work has clearly independent tracks with low coordination risk.
+Execute the plan sequentially unless the user explicitly asks for parallel work or the work has clearly independent, non-conflicting tracks with low coordination risk. Run work in parallel only when the available runtime can isolate it, its write ownership does not conflict, and the coordination cost is justified. Validate necessary handoffs and the final combined result. If a handoff fails, identify the failed work item and downstream items whose inputs are no longer valid; retry those items rather than restarting unrelated work by default.
 
 Do not silently reorder, skip, merge, or expand planned work. If new findings change scope, risk, order, design, or validation strategy, update the working plan before continuing.
 
@@ -105,6 +107,8 @@ Avoid subagents when:
 Prefer read-only subagents for planning, review, documentation lookup, reproduction, and diagnosis. Be careful with write-heavy parallel work.
 
 The main plan remains the source of truth. Subagent plans and outputs are supporting material, not replacements for main-agent judgment.
+
+When coordinating multiple delegable parts, define each work item with a bounded goal, its consumed and produced artifacts, real blocking dependencies, write ownership or read scope, and an acceptance or verification gate. A dependency exists only when a work item needs an accepted artifact from another item; do not invent dependencies merely to mirror the planned order. Where separate verification is warranted by risk or blast radius and supported by runtime capabilities, assign an independent verification task with only the necessary artifacts, criteria, and primary-evidence requirements. Do not require a Reviewer or Tester for every work item.
 
 ### Model Selection for Subagents
 
@@ -247,3 +251,15 @@ Examples:
 "Refactor X" -> "Confirm current behavior, refactor without behavior change, then rerun relevant checks."
 "Improve performance" -> "Identify the bottleneck, make the smallest targeted change, and compare before/after evidence where feasible."
 ```
+
+## 11. Completion, Authority, and Reporting
+
+Complete every in-scope deliverable the user requested. Do not substitute a plan, progress report, or proposed implementation for requested implementation.
+
+If one requested item is genuinely blocked, complete independent in-scope items. State the specific blocker, the evidence for it, the affected deliverable, and the minimum decision, access, or external change needed to proceed.
+
+Distinguish questions from change requests. For an informational, evaluative, or planning question, answer without changing code or external state unless the user explicitly asks for action. Read-only inspection needed to answer is allowed.
+
+Act without confirmation on low-risk, reversible, in-scope work when the task authorizes implementation. Ask before audience-facing communication, destructive or irreversible actions, sensitive access, production-impacting changes, material cost, or any action outside the user's stated authority or scope. An unrelated defect is not authority to broaden the change; report it unless the user asks to address it.
+
+Lead the final response with the outcome. Keep it proportionate: state what changed or was answered, validation result, and any blocker or required user action. Include exact paths or commands when they help the user continue or reproduce the result. When a decision is needed, recommend a default and present only the necessary alternatives.

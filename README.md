@@ -207,6 +207,8 @@ Subagents can help, but they do not own the outcome. Their job is to return boun
 
 > Use subagents and parallel threads when they create leverage. Do not use them just because they are available.
 
+For work with multiple delegable parts, the main agent maps bounded work nodes, real blocking dependencies, write ownership or read scope, and verification gates before fan-out. Independent nodes may run concurrently only when isolation exists and coordination cost is justified. Small tasks remain simple and sequential.
+
 ---
 
 ## Subagent Model
@@ -230,6 +232,8 @@ Precise assignment → Evidence-backed output → Main-agent verification → Ac
 ```
 
 A good subagent prompt includes role, goal, context, selected profile or model, reasoning effort, scope, non-goals, permissions, required evidence, escalation conditions, output format, and stop conditions.
+
+For multi-node work, it also identifies the node, its inputs and accepted output, blocking dependencies, ownership or read scope, and verification gate. The orchestration skill explains fan-out, handoff validation, selective retries, and final combined validation.
 
 ---
 
@@ -403,9 +407,10 @@ The main agent still decides the design, applies or rejects recommendations, and
 2. Let the installer configure global instructions, references, skills, and subagents.
 3. Add repo-specific AGENTS.md guidance to each project.
 4. For non-trivial work, let the main agent plan first.
-5. Delegate only bounded work with clear evidence requirements and explicit model routing.
-6. When independent project threads run in parallel, use the multi-session coordination skill.
-7. Verify the final combined diff before accepting completion.
+5. For multi-node work, identify real blocking dependencies, parallel-safe nodes, ownership, and verification gates.
+6. Delegate only bounded work with clear evidence requirements and explicit model routing.
+7. When independent project threads run in parallel, use the multi-session coordination skill.
+8. Verify the final combined diff and integrated behavior before accepting completion.
 ```
 
 ---

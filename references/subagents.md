@@ -56,7 +56,34 @@ Avoid subagents when:
 
 Prefer read-only subagents for planning, review, documentation lookup, reproduction, and diagnosis.
 
-Be careful with write-heavy parallel work. Do not allow multiple agents to edit the same files or tightly coupled areas at the same time unless the user explicitly asks and the conflict risk is acceptable.
+Be careful with write-heavy parallel work. Do not allow multiple agents to edit the same files or tightly coupled areas at the same time. If parallel writes are necessary, require verified isolation and explicit ownership; a request for parallel execution alone does not prove that concurrent edits are safe.
+
+## Dependency-Aware Orchestration
+
+Keep a single bounded task as one node. When work has multiple delegable parts, describe each node before fan-out:
+
+| Field | Purpose |
+| --- | --- |
+| Node ID | Stable identifier for dependencies, gates, and retries. |
+| Goal | One concrete outcome. |
+| Inputs / authoritative sources | Artifacts, decisions, code, tests, or documentation the node may rely on. |
+| Output and acceptance condition | The artifact or finding the node must return and the criteria it must satisfy. |
+| Depends on | Only upstream nodes whose accepted output is required before this node can correctly begin. |
+| Write ownership or read scope | Disjoint paths or state a writer may change, or the bounded sources a read-only node may inspect. |
+| Verification gate | Proportionate evidence required before the output may be treated as integration-ready. |
+
+An edge is real only when the downstream node cannot correctly begin without an accepted upstream artifact or decision. Do not serialize independent work merely because it was written as a list, and do not parallelize nodes that share mutable state, overlapping write ownership, or an unresolved contract.
+
+Before execution:
+
+- identify parallel-safe nodes
+- identify the remaining chain of blocking work that controls completion
+- state a runtime-aware concurrency limit and why the coordination cost is justified
+- verify that any claimed context, filesystem, worktree, or state isolation actually exists
+
+Verification must evaluate the artifact against stated criteria and primary evidence, not the producer's self-assessment. For meaningful implementation, prefer a separate Reviewer or Tester assignment with only the necessary artifact, criteria, and evidence requirements when the runtime supports it. This does not replace main-agent acceptance, and not every low-risk node needs a separate verification subagent.
+
+If a verification gate fails, revise or rerun the failed node and every downstream node whose inputs became invalid. Do not restart unrelated work by default. Before combining results, confirm all required inputs passed their gates, then validate the integrated behavior and final combined diff.
 
 ## Independent Project Threads
 
@@ -158,6 +185,17 @@ Output format:
 - Escalation needed: yes or no, with the reason
 ```
 
+For multi-node work, also include:
+
+```text
+Node ID:
+Inputs / authoritative sources:
+Output and acceptance condition:
+Depends on:
+Write ownership or read scope:
+Verification gate:
+```
+
 ## Acceptance Checklist
 
 Before accepting subagent work, the main agent must verify:
@@ -172,6 +210,8 @@ Before accepting subagent work, the main agent must verify:
 - no unrelated files were changed
 - the implementation matches existing architecture and style
 - validation was run, or a clear reason was given
+- any claimed parallel safety or isolation was verified
+- required node gates passed before fan-in and combined validation covered the integrated behavior
 - the main agent has inspected the final diff itself
 
 If subagent findings conflict, resolve the disagreement by inspecting primary evidence.
