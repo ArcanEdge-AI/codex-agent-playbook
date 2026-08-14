@@ -52,6 +52,8 @@ The plan should describe:
 
 For work with multiple delegable parts, also identify bounded work items, the artifacts each item consumes and produces, and only the dependencies that truly prevent another item from starting. Identify the completion-controlling path: the chain of required handoffs that determines when the combined work can finish. Keep this lightweight; do not require graph modeling for trivial or single-threaded work.
 
+For work with substantial fan-out, multiple genuine dependencies, broad file or repository scope, multi-layer consolidation, or separate implementation and verification paths, use the `task-graph-orchestration` skill before delegating. Do not formalize a graph for simple or genuinely linear work.
+
 Use whatever planning mechanism the environment provides. Do not assume a specific issue tracker, planning tool, CLI, MCP server, UI feature, or external system.
 
 Execute the plan sequentially unless the user explicitly asks for parallel work or the work has clearly independent, non-conflicting tracks with low coordination risk. Run work in parallel only when the available runtime can isolate it, its write ownership does not conflict, and the coordination cost is justified. Validate necessary handoffs and the final combined result. If a handoff fails, identify the failed work item and downstream items whose inputs are no longer valid; retry those items rather than restarting unrelated work by default.

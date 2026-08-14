@@ -150,11 +150,12 @@ Supporting global reference documents live under the Codex home references direc
 - `references/subagents.md` — subagent delegation rules, assignment template, and acceptance checklist
 - `references/multi-session-coordination.md` — discovery, thread naming, ownership, sequencing, conflict detection, and integration guidance for independent project threads
 - `references/reference-doc-routing.md` — how to decide which docs to consult and how to treat them
-- `references/templates/` — templates for repository-level architecture, testing, access-control, design-system, release, API, data-model, and active-work docs
+- `references/templates/` — templates for repository-level architecture, testing, access-control, design-system, release, API, data-model, active-work, and task-graph docs
 
 Reusable skills live under the user skills directory, including:
 
 - `subagent-orchestration`
+- `task-graph-orchestration`
 - `multi-session-coordination`
 - `reference-doc-routing`
 - `senior-code-review`
@@ -186,12 +187,14 @@ for path in \
   "$CODEX_HOME/references/multi-session-coordination.md" \
   "$CODEX_HOME/references/reference-doc-routing.md" \
   "$CODEX_HOME/references/templates/active-work-record.md" \
+  "$CODEX_HOME/references/templates/task-graph.md" \
   "$CODEX_HOME/agents/planner.toml" \
   "$CODEX_HOME/agents/engineer.toml" \
   "$CODEX_HOME/agents/reviewer.toml" \
   "$CODEX_HOME/agents/tester.toml" \
   "$CODEX_HOME/agents/docs.toml" \
   "$USER_SKILLS_HOME/subagent-orchestration/SKILL.md" \
+  "$USER_SKILLS_HOME/task-graph-orchestration/SKILL.md" \
   "$USER_SKILLS_HOME/multi-session-coordination/SKILL.md"; do
   if [[ -e "$path" || "$DRY_RUN" == "1" ]]; then
     say "OK: $path"

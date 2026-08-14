@@ -78,6 +78,7 @@ $CODEX_HOME/
       api-contracts.md
       data-model.md
       active-work-record.md
+      task-graph.md
   agents/
     planner.toml
     engineer.toml
@@ -87,6 +88,8 @@ $CODEX_HOME/
 
 $HOME/.agents/skills/
   subagent-orchestration/
+    SKILL.md
+  task-graph-orchestration/
     SKILL.md
   multi-session-coordination/
     SKILL.md
@@ -137,11 +140,12 @@ Supporting global reference documents live under the Codex home references direc
 - `references/subagents.md` — subagent delegation rules, assignment template, and acceptance checklist
 - `references/multi-session-coordination.md` — discovery, thread naming, ownership, sequencing, conflict detection, and integration guidance for independent project threads
 - `references/reference-doc-routing.md` — how to decide which docs to consult and how to treat them
-- `references/templates/` — templates for repository-level architecture, testing, security, design-system, release, API, data-model, and active-work docs
+- `references/templates/` — templates for repository-level architecture, testing, security, design-system, release, API, data-model, active-work, and task-graph docs
 
 Reusable skills live under the user skills directory, including:
 
 - `subagent-orchestration`
+- `task-graph-orchestration`
 - `multi-session-coordination`
 - `reference-doc-routing`
 - `senior-code-review`
@@ -190,7 +194,7 @@ After creating or updating files:
 4. Validate TOML custom agent files if a TOML parser is available.
 5. Confirm every installed custom-agent TOML explicitly defines `model` and `model_reasoning_effort`.
 6. Validate that each `SKILL.md` has frontmatter with `name` and `description`.
-7. Confirm `references/model-routing.md`, `references/multi-session-coordination.md`, `references/templates/active-work-record.md`, and `skills/multi-session-coordination/SKILL.md` were installed when supported.
+7. Confirm `references/model-routing.md`, `references/multi-session-coordination.md`, `references/templates/active-work-record.md`, `references/templates/task-graph.md`, `skills/task-graph-orchestration/SKILL.md`, and `skills/multi-session-coordination/SKILL.md` were installed when supported.
 8. Report any files backed up.
 9. Report any files skipped and why.
 10. Report any assumptions.

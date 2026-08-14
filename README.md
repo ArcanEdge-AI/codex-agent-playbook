@@ -165,7 +165,7 @@ The intent is not to make the agent slower for its own sake. The intent is to ma
 | Global instructions | `custom-instructions/` | Tool-agnostic behavior rules for elegant, maintainable code. |
 | Prompts | `codex-prompts/` | Setup and active-project coordination prompts. |
 | Reference docs | `references/` | Model routing, subagent delegation, multi-session coordination, document routing, and reusable project-doc templates. |
-| Skills | `skills/` | Reusable workflows for orchestration, multi-session coordination, doc routing, and senior review. |
+| Skills | `skills/` | Reusable workflows for task-graph and subagent orchestration, multi-session coordination, doc routing, and senior review. |
 | Custom agents | `agents/` | Codex subagent definitions for planning, engineering, review, testing, and documentation. |
 | Repo guidance | `AGENTS.md` | Instructions for maintaining this public playbook repository. |
 
@@ -234,6 +234,23 @@ Precise assignment → Evidence-backed output → Main-agent verification → Ac
 A good subagent prompt includes role, goal, context, selected profile or model, reasoning effort, scope, non-goals, permissions, required evidence, escalation conditions, output format, and stop conditions.
 
 For multi-node work, it also identifies the node, its inputs and accepted output, blocking dependencies, ownership or read scope, and verification gate. The orchestration skill explains fan-out, handoff validation, selective retries, and final combined validation.
+
+---
+
+## Formal Task-Graph Orchestration
+
+Use `task-graph-orchestration` for complex work with substantial fan-out, genuine dependencies, broad scope, layered consolidation, or separate implementation and verification paths. Prompt engineering defines each node; task-graph orchestration defines how the nodes connect, become ready, merge, fail, and require approval.
+
+The graph is an instruction and Markdown artifact. It does not add a graph database, scheduler, runner, dependency, or orchestration framework. Medium tasks can keep the graph in the working plan. Long-running, multi-phase, or multi-session implementation may use `.codex/task-graphs/<task-slug>.md` when repository policy permits it.
+
+Supporting files:
+
+```text
+skills/task-graph-orchestration/SKILL.md
+references/templates/task-graph.md
+```
+
+Run multi-session coordination first when active threads, branches, worktrees, or pull requests may create external ownership or hidden dependency edges. Keep simple or genuinely linear tasks on the normal engineering loop.
 
 ---
 
@@ -355,6 +372,7 @@ references/multi-session-coordination.md
 │       ├── release.md
 │       ├── repository-AGENTS.md
 │       ├── security.md
+│       ├── task-graph.md
 │       └── testing.md
 └── skills/
     ├── multi-session-coordination/
@@ -363,7 +381,9 @@ references/multi-session-coordination.md
     │   └── SKILL.md
     ├── senior-code-review/
     │   └── SKILL.md
-    └── subagent-orchestration/
+    ├── subagent-orchestration/
+    │   └── SKILL.md
+    └── task-graph-orchestration/
         └── SKILL.md
 ```
 

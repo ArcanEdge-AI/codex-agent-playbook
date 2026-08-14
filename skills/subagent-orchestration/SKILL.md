@@ -45,6 +45,8 @@ Run independent nodes concurrently only when the runtime can isolate them, their
 
 While delegated work is running, continue available independent, non-conflicting planning, inspection, integration, or validation work in the main thread. Do not wait solely for a subagent when useful work remains. Do not invent parallel work, exceed runtime limits, or trade evidence and verification for lower latency.
 
+When a formal task graph exists, each delegated assignment must identify its graph node, consume only declared inputs, remain within its declared read scope and write ownership, and return the declared output shape. A subagent may report a hidden dependency or invalid graph assumption, but it must not silently restructure the graph or advance blocked nodes; the main agent owns topology changes and ready-set recalculation.
+
 ## Mandatory Model Routing
 
 Before spawning a subagent, consult `references/model-routing.md` when available.

@@ -38,6 +38,7 @@ Primary evidence includes:
 - `templates/testing.md` — testing strategy template.
 - `templates/security.md` — safety and access-control model template.
 - `templates/design-system.md` — design-system and UI convention template.
+- `templates/task-graph.md` — optional instruction-only graph record for complex fan-out, dependencies, handoffs, retries, and approval gates.
 - `templates/release.md` — release and deployment template.
 - `templates/api-contracts.md` — API contract template.
 - `templates/data-model.md` — data model and persistence template.

@@ -129,11 +129,12 @@ Supporting global reference documents live under the Codex home references direc
 - `references/subagents.md` — subagent delegation rules, assignment template, and acceptance checklist
 - `references/multi-session-coordination.md` — discovery, thread naming, ownership, sequencing, conflict detection, and integration guidance for independent project threads
 - `references/reference-doc-routing.md` — how to decide which docs to consult and how to treat them
-- `references/templates/` — templates for repository-level architecture, testing, access-control, design-system, release, API, data-model, and active-work docs
+- `references/templates/` — templates for repository-level architecture, testing, access-control, design-system, release, API, data-model, active-work, and task-graph docs
 
 Reusable skills live under the user skills directory, including:
 
 - `subagent-orchestration`
+- `task-graph-orchestration`
 - `multi-session-coordination`
 - `reference-doc-routing`
 - `senior-code-review`
@@ -164,12 +165,14 @@ $CheckPaths = @(
   (Join-Path $CodexHome "references\multi-session-coordination.md"),
   (Join-Path $CodexHome "references\reference-doc-routing.md"),
   (Join-Path $CodexHome "references\templates\active-work-record.md"),
+  (Join-Path $CodexHome "references\templates\task-graph.md"),
   (Join-Path $CodexHome "agents\planner.toml"),
   (Join-Path $CodexHome "agents\engineer.toml"),
   (Join-Path $CodexHome "agents\reviewer.toml"),
   (Join-Path $CodexHome "agents\tester.toml"),
   (Join-Path $CodexHome "agents\docs.toml"),
   (Join-Path $UserSkillsHome "subagent-orchestration\SKILL.md"),
+  (Join-Path $UserSkillsHome "task-graph-orchestration\SKILL.md"),
   (Join-Path $UserSkillsHome "multi-session-coordination\SKILL.md")
 )
 
