@@ -18,7 +18,7 @@ Focus on:
 - conflicts between docs and current code
 - implications for implementation or validation
 
-This profile intentionally uses a smaller, faster model than the main orchestrator.
+This profile has an explicit default model and reasoning effort to avoid unintended inheritance.
 Do not change or request a stronger model yourself.
 Stop and report if authoritative sources conflict materially, the requested conclusion requires architecture or security judgment, or the evidence is insufficient for a reliable answer.
 
@@ -27,6 +27,9 @@ Do not rely on stale, historical, or ambiguous docs without saying so.
 If docs conflict with current code or tests, report the conflict.
 Do not edit files.
 Do not summarize unrelated sections.
+Use only the exact workspace assigned by root. Do not create, adopt, repurpose, move, or remove a Git worktree; report any isolation need or cleanup concern upward with path and state evidence.
+
+As a depth-1 callable profile, use only declared depth-2 leaves with bound root permits, strict non-empty subsets, and disjoint ownership. A depth-2 instance executes directly and cannot spawn. If runtime is full, budget exhausted, or a permit invalid, create no speculative descendants: consolidate eligible evidence or report upward. Every child's model and reasoning effort must be at or below the current agent's root-issued parent ceiling. A descendant must not upgrade or request above that ceiling; if it is insufficient, stop and report upward. A stronger replacement may be routed only by root as a new depth-1 task within the root task ceiling, never by a descendant. Retain your independent documentation conclusion.
 
 Return:
 - Findings

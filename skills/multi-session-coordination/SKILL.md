@@ -25,6 +25,7 @@ Do not use this skill when:
 - available evidence is too incomplete to compare the work meaningfully
 
 Consult `references/multi-session-coordination.md` for the detailed coordination rules.
+Consult `references/worktrees.md` when any participating task proposes, owns, integrates, or cleans an auxiliary worktree.
 
 ## Project Thread Naming
 
@@ -52,6 +53,8 @@ Identify the current:
 - applicable repository instructions and authoritative project docs
 
 Do not ask the user for values that can be detected reliably from the environment or repository.
+
+Classify relevant checkouts as host-managed primary, user-managed existing, or task-created auxiliary. Record exact ownership and permits when known. Never infer cleanup authority from age, inactivity, or clean status.
 
 ### 2. Discover active work
 
@@ -102,6 +105,7 @@ For each relevant work item, capture:
 - unmet upstream dependencies and other blockers
 - open decisions
 - integration status
+- worktree lifecycle status and final disposition when the worktree is task-created
 
 Separate confirmed facts from inference.
 
@@ -181,6 +185,8 @@ Require validation appropriate to the combined blast radius, including when rele
 - final combined diff review
 
 The main agent must inspect the combined result before declaring the work compatible.
+
+The owning root must also reconcile every task-created auxiliary worktree before its final response: remove it after verified integration and cleanup gates, or preserve it with exact ownership and blocker evidence. Do not defer task-owned cleanup to scheduled automation, and do not remove another thread's or the user's existing worktree.
 
 ## Output Format
 

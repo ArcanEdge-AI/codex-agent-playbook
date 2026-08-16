@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  Configure Codex to behave less like a loose autocomplete engine and more like a disciplined senior engineer: plan clearly, change surgically, delegate carefully, coordinate parallel work, verify honestly, and ship maintainable code.
+  Configure Codex to behave less like a loose autocomplete engine and more like a disciplined senior engineer: orchestrate subagent execution, plan clearly, coordinate parallel work, verify honestly, and ship maintainable code.
 </p>
 
 <p align="center">
@@ -19,6 +19,7 @@
   <a href="#why-this-exists">Why This Exists</a> ·
   <a href="#whats-inside">What's Inside</a> ·
   <a href="#subagent-model">Subagent Model</a> ·
+  <a href="#task-local-worktree-lifecycle">Worktrees</a> ·
   <a href="#coordinating-parallel-codex-threads">Parallel Threads</a> ·
   <a href="#repository-structure">Structure</a>
 </p>
@@ -129,7 +130,7 @@ This repository is the Codex-focused version of the playbook.
 | Codex | `ArcanEdge-AI/codex-agent-playbook` | You want global Codex custom instructions, reference docs, skills, and subagent definitions. |
 | Claude Code | [`ArcanEdge-AI/claude-code-agent-playbook`](https://github.com/ArcanEdge-AI/claude-code-agent-playbook) | You want the companion setup tuned for Claude Code. |
 
-The philosophy is shared across both: the main agent acts as the senior engineer/orchestrator, subagents do bounded evidence-backed work, independent project threads are coordinated explicitly, and final decisions stay with the main agent.
+The philosophy is shared across both: the main agent acts as the senior engineer/orchestrator, subagents perform bounded evidence-backed execution, independent project threads are coordinated explicitly, and final decisions stay with the main agent.
 
 ---
 
@@ -196,18 +197,20 @@ It owns:
 - task understanding
 - the working plan
 - architecture and design judgment
-- delegation decisions
+- routing, decomposition, and delegation decisions
 - parallel-work coordination
-- final implementation
+- integration and final acceptance
 - final diff
 - validation strategy
 - final response
 
-Subagents can help, but they do not own the outcome. Their job is to return bounded findings with evidence. Independent project threads may own separate workstreams, but the main coordinating agent still owns compatibility and integration decisions.
+For every repository task, subagents perform the bounded execution work when they are available. The main agent remains accountable for the outcome. Independent project threads may own separate workstreams, but the main coordinating agent still owns compatibility and integration decisions.
 
-> Use subagents and parallel threads when they create leverage. Do not use them just because they are available.
+> At the root, delegate actual execution to at least one bounded subagent for every repository task when subagents are available. Root direct main-agent execution is limited to unavailable subagents, an explicit user prohibition, or an authority-bound action that cannot be delegated; record the exact exception.
 
-For work with multiple delegable parts, the main agent maps bounded work nodes, real blocking dependencies, write ownership or read scope, and verification gates before fan-out. Independent nodes may run concurrently only when isolation exists and coordination cost is justified. Small tasks remain simple and sequential.
+For work with multiple delegable parts, the main agent maps bounded work nodes, real blocking dependencies, write ownership or read scope, and verification gates before fan-out. Dispatch a child only when it is already a finite-manifest member, fits the remaining total node budget, holds its required root permit, and fits runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Real dependencies, verified isolation, and user instructions also constrain concurrency; serialize only real conflicts. Small or linear tasks may skip formal graph mode but still require bounded subagent execution.
+
+Subagents share the current workspace by default. Worktrees have a separate finite budget that starts at zero; they are created only by the root for a verified isolation need, not per agent. The root may authorize one active auxiliary without additional approval; two or more require user approval for the exact count and reasons. Every task-created auxiliary worktree is integrated and safely removed inside the task or preserved with an exact blocker. No scheduled cleanup task is required for this lifecycle.
 
 ---
 
@@ -235,11 +238,15 @@ A good subagent prompt includes role, goal, context, selected profile or model, 
 
 For multi-node work, it also identifies the node, its inputs and accepted output, blocking dependencies, ownership or read scope, and verification gate. The orchestration skill explains fan-out, handoff validation, selective retries, and final combined validation.
 
+### Recursive delegation and token economy
+
+The root owns a finite manifest, total spawned-node budget, and child-specific permits. Every dispatched child must already be a finite-manifest member, fit the remaining total node budget, hold its required root permit, and fit runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Profiles are callable only when the host supports custom-agent invocation, including an `@tag` interface if offered, and are depth 1. A root-permitted depth-1 local orchestrator may create declared depth-2 leaves. Depth 2 executes directly and cannot spawn. For each child, model and reasoning effort must be at or below the explicit ceiling of its parent; descendants cannot upgrade and must stop and report if insufficient. When capacity is full, do not queue speculative descendants. This is instruction-only, not a scheduler.
+
 ---
 
 ## Formal Task-Graph Orchestration
 
-Use `task-graph-orchestration` for complex work with substantial fan-out, genuine dependencies, broad scope, layered consolidation, or separate implementation and verification paths. Prompt engineering defines each node; task-graph orchestration defines how the nodes connect, become ready, merge, fail, and require approval.
+Use `task-graph-orchestration` for complex work with substantial fan-out, genuine dependencies, broad scope, layered consolidation, or separate implementation and verification paths. Prompt engineering defines each node; task-graph orchestration defines how the nodes connect, become ready, merge, fail, and require approval. Small or linear work may skip the formal graph, but not default subagent execution.
 
 The graph is an instruction and Markdown artifact. It does not add a graph database, scheduler, runner, dependency, or orchestration framework. Medium tasks can keep the graph in the working plan. Long-running, multi-phase, or multi-session implementation may use `.codex/task-graphs/<task-slug>.md` when repository policy permits it.
 
@@ -251,6 +258,38 @@ references/templates/task-graph.md
 ```
 
 Run multi-session coordination first when active threads, branches, worktrees, or pull requests may create external ownership or hidden dependency edges. Keep simple or genuinely linear tasks on the normal engineering loop.
+
+---
+
+## Task-Local Worktree Lifecycle
+
+The worktree policy prevents swarm fan-out from becoming checkout fan-out:
+
+```text
+Current workspace + auxiliary budget 0
+    ↓
+Concrete isolation need verified
+    ↓
+Root issues one finite worktree permit
+    ↓
+Assigned nodes reuse that exact workspace
+    ↓
+Root integrates and validates the result
+    ↓
+Remove safely, or preserve with an exact blocker
+```
+
+Only the root may create, adopt, repurpose, move, or remove an auxiliary worktree. It may authorize one active auxiliary without additional approval; two or more require approval for the exact count and reasons. Descendants receive an exact workspace assignment and report any additional isolation need upward. Retries reuse compatible worktrees. Overlapping writers normally serialize because separate checkouts do not remove design or merge conflicts.
+
+Before the final response, the root reconciles every task-created auxiliary worktree. It either verifies safe non-force removal inside the task or reports the exact path, owner, branch or HEAD, blocker, and next action. The workflow does not defer task-owned cleanup to scheduled automation and does not treat host-managed or pre-existing user worktrees as disposable.
+
+Supporting files:
+
+```text
+references/worktrees.md
+references/templates/worktree-manifest.md
+skills/worktree-lifecycle/SKILL.md
+```
 
 ---
 
@@ -328,6 +367,7 @@ references/model-routing.md
 references/reference-doc-routing.md
 references/subagents.md
 references/multi-session-coordination.md
+references/worktrees.md
 ```
 
 ---
@@ -336,6 +376,7 @@ references/multi-session-coordination.md
 
 ```text
 .
+├── .gitattributes
 ├── AGENTS.md
 ├── CONTRIBUTING.md
 ├── INSTALL.md
@@ -363,6 +404,7 @@ references/multi-session-coordination.md
 │   ├── multi-session-coordination.md
 │   ├── reference-doc-routing.md
 │   ├── subagents.md
+│   ├── worktrees.md
 │   └── templates/
 │       ├── active-work-record.md
 │       ├── api-contracts.md
@@ -373,6 +415,7 @@ references/multi-session-coordination.md
 │       ├── repository-AGENTS.md
 │       ├── security.md
 │       ├── task-graph.md
+│       ├── worktree-manifest.md
 │       └── testing.md
 └── skills/
     ├── multi-session-coordination/
@@ -383,7 +426,11 @@ references/multi-session-coordination.md
     │   └── SKILL.md
     ├── subagent-orchestration/
     │   └── SKILL.md
-    └── task-graph-orchestration/
+    ├── task-graph-orchestration/
+    │   └── SKILL.md
+    └── worktree-lifecycle/
+        ├── agents/
+        │   └── openai.yaml
         └── SKILL.md
 ```
 
@@ -426,11 +473,12 @@ The main agent still decides the design, applies or rejects recommendations, and
 1. Ask your coding agent to install this repository URL.
 2. Let the installer configure global instructions, references, skills, and subagents.
 3. Add repo-specific AGENTS.md guidance to each project.
-4. For non-trivial work, let the main agent plan first.
-5. For multi-node work, identify real blocking dependencies, parallel-safe nodes, ownership, and verification gates.
-6. Delegate only bounded work with clear evidence requirements and explicit model routing.
-7. When independent project threads run in parallel, use the multi-session coordination skill.
-8. Verify the final combined diff and integrated behavior before accepting completion.
+4. Let the main agent frame, route, and coordinate each repository task.
+5. At the root, record the finite manifest, total node budget, and child-specific permits; select host-callable depth-1 profiles, including an `@tag` interface only if offered, with model and reasoning effort at or below the parent explicit ceiling. A permitted depth-1 node may create declared depth-2 leaves, which cannot spawn.
+6. For multi-node work, identify real blocking dependencies, parallel-safe nodes, ownership, and verification gates, then dispatch only finite-manifest members that fit the remaining total node budget, hold required root permits, and fit runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; get immediate user approval for a material expansion.
+7. Keep the auxiliary-worktree budget at zero unless root verifies a real isolation need. Before completion, remove each task-created auxiliary worktree safely or preserve it with an exact blocker.
+8. When independent project threads run in parallel, use the multi-session coordination skill.
+9. Verify the final combined diff and integrated behavior before accepting completion.
 ```
 
 ---

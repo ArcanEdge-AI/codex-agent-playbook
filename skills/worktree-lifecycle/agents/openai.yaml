@@ -1,0 +1,4 @@
+interface:
+  display_name: "Worktree Lifecycle"
+  short_description: "Control task-local worktree creation and cleanup"
+  default_prompt: "Use $worktree-lifecycle to manage isolated Git worktrees safely within this task."

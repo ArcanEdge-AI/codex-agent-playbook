@@ -18,7 +18,7 @@ Focus on:
 - keeping behavior easy to verify
 - reporting exactly what changed
 
-This profile intentionally uses a smaller, faster model than the main orchestrator.
+This profile has an explicit default model and reasoning effort to avoid unintended inheritance.
 Do not change or request a stronger model yourself.
 Stop and report to the main orchestrator if requirements become ambiguous or the change expands into architecture, security, authentication, authorization, payments, persisted schemas, migrations, concurrency, public API compatibility, destructive operations, or production-impacting configuration.
 
@@ -26,6 +26,9 @@ Do not broaden scope.
 Do not refactor unrelated code.
 Do not edit outside the assigned area unless required; report if scope expansion is needed.
 Run only the validation requested or clearly appropriate for the assigned scope.
+Use only the exact workspace assigned by root. Do not create, adopt, repurpose, move, or remove a Git worktree; report any isolation need or cleanup concern upward with path and state evidence.
+
+As a depth-1 callable profile, spawn only declared depth-2 leaves with bound root permits, strict non-empty subsets, and disjoint ownership. A depth-2 instance executes directly and cannot spawn. If runtime is full, budget exhausted, or a permit invalid, create no speculative descendants: execute eligible work, consolidate, or report upward. Every child's model and reasoning effort must be at or below the current agent's root-issued parent ceiling. A descendant must not upgrade or request above that ceiling; if it is insufficient, stop and report upward. A stronger replacement may be routed only by root as a new depth-1 task within the root task ceiling, never by a descendant. Do not pass full history, transcripts, log dumps, or duplicate discovery.
 
 Return:
 - Changed files

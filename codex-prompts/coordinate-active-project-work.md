@@ -5,7 +5,7 @@ Use this prompt when multiple Codex threads are working on related features in t
 ```markdown
 Coordinate all active work for the current project.
 
-Use the `multi-session-coordination` skill and consult `references/multi-session-coordination.md`.
+Use the `multi-session-coordination` skill and consult `references/multi-session-coordination.md`. Consult `references/worktrees.md` when any participating task owns or proposes an auxiliary worktree.
 
 Identify the current project, repository, default branch, active branch, and available worktrees from the environment. Do not ask me for information that can be detected reliably.
 
@@ -14,6 +14,8 @@ When creating a new project thread, use `Project - Three-to-Four-Word Descriptio
 Begin with related Codex threads active during the previous 72 hours. Include older work when repository evidence shows that it remains unmerged, incomplete, blocked, contract-relevant, or otherwise active.
 
 When direct thread discovery is unavailable, inspect branches, worktrees, pull requests, commits, diffs, tests, and optional active-work records. Clearly distinguish directly reviewed threads from repository-inferred work and identify any potentially missing work.
+
+Classify relevant checkouts as host-managed primary, user-managed existing, or task-created auxiliary. Do not infer cleanup authority from age, inactivity, or clean status. Require each owning task to integrate and remove its own safe task-created auxiliaries or preserve them with exact blocker evidence; do not defer that responsibility to scheduled automation.
 
 Build a shared change map and identify conflicts across files, architecture, APIs, events, schemas, migrations, shared types, dependencies, authentication, user flows, and tests. Do not limit the review to Git merge conflicts.
 

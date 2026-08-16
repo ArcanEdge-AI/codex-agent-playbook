@@ -38,6 +38,7 @@ Do not use it when:
 6. **Resolve conflicts using primary evidence, not confident summaries.**
 7. **Do not claim a thread was reviewed when only its branch or diff was inspected.**
 8. **The final goal is behavioral compatibility, not merely a clean Git merge.**
+9. **A worktree is not disposable until its exact owner and task-local lifecycle are verified.**
 
 ## Project Thread Naming
 
@@ -128,6 +129,7 @@ For every relevant work item, record:
 - last known activity
 - repository
 - branch or worktree
+- worktree class and task-local permit when applicable
 - current status
 - files and modules affected
 - APIs, events, routes, or shared interfaces affected
@@ -142,6 +144,8 @@ For every relevant work item, record:
 - merge or integration status
 
 The map should distinguish confirmed facts from inference.
+
+When a task proposes or owns an auxiliary worktree, consult `references/worktrees.md`. Keep its worktree permit separate from subagent or graph-node permits. The coordinating root may clean only auxiliary worktrees that its own task created or explicitly adopted; existing user-managed or other-thread worktrees remain preserved unless ownership is transferred through primary evidence.
 
 ## Conflict Categories
 
@@ -272,6 +276,8 @@ Use `references/templates/active-work-record.md` as the starting point.
 In that record, `dependencies` names required upstream work artifacts or decisions, `blocked_by` lists dependencies that are not yet satisfied, `owned_paths` records write ownership, and `validation_required` defines the gates that must pass before integration-ready status. Do not introduce synonymous fields unless a concrete consumer requires them.
 
 These records are advisory coordination aids. Verify them against current Git state, code, tests, pull requests, and thread evidence before relying on them.
+
+Task-created auxiliary worktrees must be integrated and removed inside the owning task when all cleanup gates pass, or preserved with an exact owner, path, branch or HEAD, blocker, and next action. Do not assign this task-local responsibility to a scheduled cleaner. A broader stale-worktree sweep is a separate workflow and never supplies missing ownership evidence.
 
 Do not require every repository to adopt this directory.
 

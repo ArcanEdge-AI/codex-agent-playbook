@@ -5,14 +5,12 @@ description: Use for complex coding tasks with substantial fan-out, multiple gen
 
 # Task Graph Orchestration
 
-Use instructions and Markdown to make complex work topology explicit. Do not introduce a graph database, scheduler, runner, schema package, or orchestration framework. The host executes ordinary inline work and subagent assignments; the main agent compiles the graph, controls transitions, accepts evidence, and owns the final result.
+Use instructions and Markdown to make complex work topology explicit. Do not introduce a graph database, scheduler, runner, schema package, or orchestration framework. The host executes ordinary inline work and subagent assignments; the root main agent compiles the root graph, exclusively controls root transitions and ready set, accepts evidence, and owns the final result.
 
 ## Decide Whether to Use a Formal Graph
 
 Consider a formal graph when one or more of these conditions apply:
 
-- the task has roughly six or more meaningful work nodes
-- work spans ten or more files, documents, repositories, or sources
 - multiple independent investigations can run concurrently
 - several subagents will be used
 - many similar items must be audited or transformed without omissions
@@ -22,7 +20,7 @@ Consider a formal graph when one or more of these conditions apply:
 - the result is difficult for the user to verify manually
 - the task ends with deployment, deletion, publication, outbound communication, or another approval-gated action
 
-Skip formal graph mode when the task is small, genuinely linear, dominated by one coherent design judgment, limited to tightly coupled writes, impossible for the main agent to verify, or cheaper to execute than to maintain as a graph. Keep ordinary tasks on the normal engineering loop.
+Skip formal graph mode when the task is small, genuinely linear, dominated by one coherent design judgment, limited to tightly coupled writes, impossible for the main agent to verify, or cheaper to execute than to maintain as a graph. This does not waive default subagent execution: assign the bounded execution work to at least one subagent when available. Keep ordinary tasks on the normal engineering loop.
 
 ## Establish the Preflight
 
@@ -31,6 +29,7 @@ Skip formal graph mode when the task is small, genuinely linear, dominated by on
 3. Define the overall goal and observable success criteria.
 4. Identify actions that require explicit approval because they are audience-facing, destructive, irreversible, sensitive, production-impacting, materially costly, or outside existing authority.
 5. Read `references/templates/task-graph.md` before creating a formal graph artifact.
+6. Read `references/worktrees.md` when any node proposes or already owns an auxiliary worktree. Keep worktree permits separate from node permits.
 
 Keep a medium task graph in the working plan or response. For long-running, multi-phase, or multi-session implementation, create `.codex/task-graphs/<task-slug>.md` when repository policy permits a local coordination artifact. Otherwise keep the graph in the available planning mechanism. Do not create or commit a repository artifact for an informational question or when the task does not authorize changes.
 
@@ -40,7 +39,7 @@ Define each node with:
 
 - a stable node identifier
 - one bounded goal
-- an executor: main agent, subagent role, command, or approval gate
+- an executor: use a subagent role for actual repository execution; root main-agent nodes are limited to root orchestration, topology, integration, verification, approval, final acceptance, or a documented root direct-execution exception
 - authoritative inputs
 - a declared output shape and acceptance condition
 - only the upstream nodes whose accepted outputs it consumes
@@ -49,6 +48,11 @@ Define each node with:
 - the smallest suitable model and reasoning effort when delegated
 - a verification gate proportionate to risk
 - a current status
+- an exact assigned workspace, plus a root-issued worktree permit only when an auxiliary checkout is justified
+
+Nodes may contain local child subtrees, but only their parent may manage local child state. The root main session exclusively owns root topology and the root ready set. A local child must be equal to or narrower than its parent in all inherited constraints; use the assignment contract in `subagent-orchestration` and `references/subagents.md`.
+
+The root records a finite manifest and total spawned-node budget. Where the host supports callable installed profiles, depth 1 is root-selected through an `@tag` or equivalent programmatic route; this is not a claim that a picker or route was tested. A root-issued permit may create a depth-2 explicitly routed leaf with a strict non-empty subset, disjoint sibling ownership, model/effort at or below the parent's explicit ceiling, and acceptance. Depth 1 executes directly when no valid permitted strict-subset split exists; depth 2 executes directly and never spawns. Dispatch only ready nodes in the finite root manifest that have a root permit, remaining total node budget, and runtime, safety, and ownership capacity. Runtime-full is backpressure. Retries reuse ID/permit. A stronger replacement is a new root-routed depth-1 node within the root task ceiling and consumes a new root permit/budget. Every expansion needs a documented root reason limited to a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also requires immediate user approval. A descendant that cannot finish within its ceiling stops and reports; it cannot escalate itself to a stronger model.
 
 Audit every proposed edge with this question:
 
@@ -61,6 +65,7 @@ If yes, do not add a data-dependency edge merely to preserve narrative order. Ch
 - shared ports, services, environments, locks, credentials, or rate limits
 - cost or resource ceilings
 - active ownership in another thread or worktree
+- auxiliary-worktree budget and lifecycle obligations
 - destructive, irreversible, production, or audience-facing actions
 
 Add explicit fan-in nodes where multiple outputs must be combined. Add independent verification nodes for high-risk claims or changes. Add approval nodes immediately before actions that require user authorization. Identify the completion-controlling path and the initial ready set.
@@ -69,10 +74,10 @@ Add explicit fan-in nodes where multiple outputs must be combined. Add independe
 
 Dispatch a node only when all declared dependencies have accepted outputs and all hidden constraints are satisfied.
 
-- Run independent nodes concurrently only when the host supports it, scopes do not conflict, and the coordination cost is justified.
-- State a concurrency limit instead of assuming unlimited fan-out.
+- Dispatch only ready nodes in the finite root manifest that have a root permit, remaining total node budget, and runtime, safety, and verified ownership or isolation capacity. Do not treat all independent work as automatically dispatchable.
+- Start with the current workspace and an auxiliary-worktree budget of zero. A subagent or graph node does not imply a worktree. Only root may issue a separate worktree permit; it may authorize one active auxiliary without additional approval, while two or more require user approval for the exact count and reasons. Descendants must not create, adopt, repurpose, move, or remove worktrees.
 - If parallel execution is unavailable, process ready nodes sequentially while preserving dependencies and state.
-- Keep architecture, security-sensitive judgment, destructive operations, migrations, concurrency design, public API compatibility, and final acceptance with the main agent unless stronger delegated review is explicitly justified.
+- Keep architecture, security-sensitive judgment, destructive operations, migrations, concurrency design, public API compatibility, and final acceptance with the main agent. Delegate evidence gathering, bounded authorized work, or independent review for those areas whenever available.
 
 When delegating, use the existing subagent assignment contract and add:
 
@@ -86,7 +91,7 @@ Write or mutable-state ownership:
 Verification gate:
 ```
 
-A subagent must not silently restructure the graph, expand its scope, consume undeclared inputs, or claim a blocked dependency is complete. It must return the declared output or report the exact capability gap, hidden dependency, conflict, or missing input to the main agent.
+A subagent must not silently restructure the root graph, expand its scope, consume undeclared inputs, or claim a blocked dependency is complete. It may manage a declared local subtree only within inherited constraints and must return the declared output or report the exact capability gap, hidden dependency, conflict, or missing input to its parent.
 
 ## Update State and Consolidate Results
 
@@ -98,7 +103,7 @@ After each node returns:
 4. Recalculate the ready set.
 5. Record expected, received, missing, failed, and blocked node identifiers before fan-in.
 
-For large fan-out, consolidate in layers. Preserve node IDs, paths, evidence references, counts, severity, and confidence. Do not collapse specific findings into vague summaries. Confirm every expected node appears exactly once in the consolidation or is explicitly listed as missing, failed, blocked, or superseded.
+For large fan-out, consolidate in layers. Preserve node IDs, paths, evidence references, counts, severity, and confidence. Do not collapse specific findings into vague summaries. Confirm every expected node appears exactly once in the consolidation or is explicitly listed as missing, failed, blocked, or superseded. Local parents return compact lineage, accepted artifact paths, and evidence rather than full child history, transcripts, or long logs.
 
 ## Verify and Retry Selectively
 
@@ -113,6 +118,8 @@ If a gate fails:
 - stop blind retries and report the exact blocker when the same failure persists
 
 Before completion, verify the combined behavior and final diff, confirm the completeness counts, and ensure no required node or approval gate remains blocked.
+
+Also reconcile every task-created auxiliary worktree before completion. Integrate and remove it under the verified gates in `references/worktrees.md`, or preserve it with the exact path, owner, branch or HEAD, blocker, and next action. Do not leave task-owned cleanup to scheduled automation.
 
 ## Enforce Approval Gates
 

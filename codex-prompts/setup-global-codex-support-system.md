@@ -119,7 +119,10 @@ If `$CODEX_HOME/AGENTS.md` already exists:
 - Preserve it.
 - Do not replace it.
 - Do not remove existing guidance.
-- Add only a small reference section if it is missing.
+- Preserve all user-authored content outside the exact `<!-- codex-agent-playbook:start -->` and `<!-- codex-agent-playbook:end -->` markers.
+- If exactly one well-ordered marked section exists, create a timestamped backup and replace only that inclusive marked block with the current small reference section; do not leave stale marked content unchanged.
+- If neither marker exists, add the small reference section.
+- If only one marker exists, either marker is duplicated, or the end marker appears before the start marker, stop and report the malformed state without writing the file.
 - If the existing file already appears to duplicate the full UI custom instructions, report that possible duplication but do not delete anything.
 
 If `$CODEX_HOME/AGENTS.override.md` exists:
@@ -131,21 +134,23 @@ The pointer section should be:
 ```markdown
 # Global Codex Reference Map
 
-The primary global coding-agent behavior is configured in Codex Personalization > Custom instructions.
+The primary global coding-agent behavior may be configured in Codex Personalization > Custom instructions or in this AGENTS.md file.
 
 Supporting global reference documents live under the Codex home references directory:
 
 - `references/README.md` — map of available global reference docs
 - `references/model-routing.md` — mandatory subagent model-selection, escalation, and acceptance rules
 - `references/subagents.md` — subagent delegation rules, assignment template, and acceptance checklist
+- `references/worktrees.md` — root-owned task-local worktree budgeting, permits, integration, cleanup, and preservation rules
 - `references/multi-session-coordination.md` — discovery, thread naming, ownership, sequencing, conflict detection, and integration guidance for independent project threads
 - `references/reference-doc-routing.md` — how to decide which docs to consult and how to treat them
-- `references/templates/` — templates for repository-level architecture, testing, security, design-system, release, API, data-model, active-work, and task-graph docs
+- `references/templates/` — templates for repository-level architecture, testing, access-control, design-system, release, API, data-model, active-work, task-graph, and worktree-manifest docs
 
 Reusable skills live under the user skills directory, including:
 
 - `subagent-orchestration`
 - `task-graph-orchestration`
+- `worktree-lifecycle`
 - `multi-session-coordination`
 - `reference-doc-routing`
 - `senior-code-review`
@@ -158,14 +163,18 @@ Custom Codex subagents live under the Codex home agents directory:
 - `agents/tester.toml`
 - `agents/docs.toml`
 
-Reference documents are supporting context, not automatic truth.
+Reference documents are supporting context, not automatic truth. For every repository task when subagents are available, the main agent delegates actual execution to at least one bounded subagent; it remains accountable for orchestration, final diff, validation, acceptance, and final response. Direct main-agent execution is limited to unavailable subagents, an explicit user prohibition, or a specific authority-bound action that cannot be delegated; record the exact exception.
+
+The root owns a finite manifest, total spawned-node budget, and child-specific permits. Every dispatched child must already be a finite-manifest member, fit the remaining total node budget, hold its required root permit, and fit runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Profiles are callable only when the host supports custom-agent invocation, including an `@tag` interface if offered, and are depth 1. A root-permitted depth-1 local orchestrator may create declared depth-2 leaves. Depth 2 executes directly and cannot spawn. For each child, model and reasoning effort must be at or below the explicit ceiling of its parent; descendants cannot upgrade and must stop and report if insufficient. When capacity is full, do not queue speculative descendants.
+
+The auxiliary-worktree budget starts at zero and is separate from the node budget. Worktrees are not created per agent. Only root may issue a worktree permit or create, adopt, repurpose, move, or remove an auxiliary worktree. Root may authorize one active auxiliary without additional approval; two or more require user approval for the exact count and reasons. Descendants use their exact assigned workspace and report isolation needs upward. Before the final response, root removes each task-created auxiliary under verified safety gates or preserves it with an exact owner, path, branch or HEAD, blocker, and next action. Do not defer task-owned cleanup to scheduled automation. A host-managed active workspace follows the supported host lifecycle.
+```
 
 The main agent must verify implementation-relevant claims against primary evidence such as current code, tests, schemas, configuration, logs, build output, typecheck output, runtime behavior, and authoritative external documentation.
 
-When delegating to subagents or coordinating independent threads, the main agent should pass only relevant reference document names, paths, or sections. Do not dump large documents into prompts unless necessary.
+When delegating to subagents or coordinating independent threads, pass only relevant reference document names, paths, or sections. Do not dump large documents into prompts unless necessary.
 
 The main agent remains accountable for the final plan, final diff, validation, and final response.
-```
 
 If adding this to an existing `AGENTS.md`, use the heading `## Global Reference Documents and Subagent Support` and include the same content below that heading without duplicating a similar section.
 
@@ -176,6 +185,7 @@ Use the contents from this repository as the canonical source for:
 - `references/README.md`
 - `references/model-routing.md`
 - `references/subagents.md`
+- `references/worktrees.md`
 - `references/multi-session-coordination.md`
 - `references/reference-doc-routing.md`
 - `references/templates/*.md`
@@ -194,7 +204,7 @@ After creating or updating files:
 4. Validate TOML custom agent files if a TOML parser is available.
 5. Confirm every installed custom-agent TOML explicitly defines `model` and `model_reasoning_effort`.
 6. Validate that each `SKILL.md` has frontmatter with `name` and `description`.
-7. Confirm `references/model-routing.md`, `references/multi-session-coordination.md`, `references/templates/active-work-record.md`, `references/templates/task-graph.md`, `skills/task-graph-orchestration/SKILL.md`, and `skills/multi-session-coordination/SKILL.md` were installed when supported.
+7. Confirm `references/model-routing.md`, `references/multi-session-coordination.md`, `references/worktrees.md`, `references/templates/active-work-record.md`, `references/templates/task-graph.md`, `references/templates/worktree-manifest.md`, `skills/task-graph-orchestration/SKILL.md`, `skills/worktree-lifecycle/SKILL.md`, and `skills/multi-session-coordination/SKILL.md` were installed when supported.
 8. Report any files backed up.
 9. Report any files skipped and why.
 10. Report any assumptions.
