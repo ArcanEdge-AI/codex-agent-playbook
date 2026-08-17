@@ -2,15 +2,17 @@
 set -euo pipefail
 
 MODE="full"
+FULL_REQUESTED="0"
+SUPPORT_ONLY_REQUESTED="0"
 DRY_RUN="0"
 
 for arg in "$@"; do
   case "$arg" in
     --full)
-      MODE="full"
+      FULL_REQUESTED="1"
       ;;
     --support-only)
-      MODE="support-only"
+      SUPPORT_ONLY_REQUESTED="1"
       ;;
     --dry-run)
       DRY_RUN="1"
@@ -19,8 +21,8 @@ for arg in "$@"; do
       cat <<'HELP'
 Usage: bash install/install.sh [--full|--support-only] [--dry-run]
 
---full          Install global instructions plus references, skills, and custom agents.
---support-only  Install references, skills, and custom agents; add only a pointer to AGENTS.md.
+--full          Install or update global instructions, references, skills, and custom agents. This is the default.
+--support-only  Explicit pointer-only mode for users whose global instructions live in Codex Personalization.
 --dry-run       Print actions without writing files.
 HELP
       exit 0
@@ -32,11 +34,21 @@ HELP
   esac
 done
 
+if [[ "$FULL_REQUESTED" == "1" && "$SUPPORT_ONLY_REQUESTED" == "1" ]]; then
+  echo "Choose either --full or --support-only, not both. Full mode is the default for installs and updates." >&2
+  exit 1
+fi
+
+if [[ "$SUPPORT_ONLY_REQUESTED" == "1" ]]; then
+  MODE="support-only"
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
 USER_SKILLS_HOME="${USER_SKILLS_HOME:-$HOME/.agents/skills}"
 TIMESTAMP="$(date +%Y%m%d%H%M%S)"
+MANIFEST_PATH="$CODEX_HOME/.codex-agent-playbook-managed-files.tsv"
 
 say() {
   printf '%s\n' "$*"
@@ -49,6 +61,20 @@ run() {
     printf '\n'
   else
     "$@"
+  fi
+}
+
+sha256_file() {
+  local path="$1"
+  if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$path" | awk '{ print tolower($1) }'
+  elif command -v shasum >/dev/null 2>&1; then
+    shasum -a 256 "$path" | awk '{ print tolower($1) }'
+  elif command -v openssl >/dev/null 2>&1; then
+    openssl dgst -sha256 "$path" | awk '{ print tolower($NF) }'
+  else
+    say "No SHA-256 tool is available; install sha256sum, shasum, or openssl." >&2
+    return 1
   fi
 }
 
@@ -65,6 +91,10 @@ copy_file() {
   local src="$1"
   local dest="$2"
   run mkdir -p "$(dirname "$dest")"
+  if [[ -f "$dest" ]] && cmp -s "$src" "$dest"; then
+    say "Unchanged $dest"
+    return
+  fi
   backup_file "$dest"
   say "Installing $dest"
   run cp "$src" "$dest"
@@ -83,6 +113,181 @@ copy_tree() {
     local dest="$dest_dir/$rel"
     copy_file "$src" "$dest"
   done < <(find "$src_dir" -type f -print0)
+}
+
+validate_manifest_relative_path() {
+  local rel="$1"
+  if [[ -z "$rel" || "$rel" == /* || "$rel" == *$'\t'* || "$rel" == *$'\r'* || "$rel" == *$'\n'* ]]; then
+    say "Unsafe managed-file manifest path: '$rel'" >&2
+    return 1
+  fi
+
+  case "/$rel/" in
+    *'/../'*|*'/./'*|*'//'*)
+      say "Unsafe managed-file manifest path: '$rel'" >&2
+      return 1
+      ;;
+  esac
+}
+
+destination_for_manifest_entry() {
+  local root="$1"
+  local rel="$2"
+  validate_manifest_relative_path "$rel"
+
+  case "$root" in
+    references) printf '%s\n' "$CODEX_HOME/references/$rel" ;;
+    agents) printf '%s\n' "$CODEX_HOME/agents/$rel" ;;
+    skills) printf '%s\n' "$USER_SKILLS_HOME/$rel" ;;
+    *)
+      say "Unknown managed-file root '$root'." >&2
+      return 1
+      ;;
+  esac
+}
+
+build_current_manifest() {
+  local output="$1"
+  local root src_dir src rel hash
+
+  printf '# codex-agent-playbook managed files v1\n' > "$output"
+  for root in references agents skills; do
+    case "$root" in
+      references) src_dir="$REFERENCES_DIR" ;;
+      agents) src_dir="$AGENTS_DIR" ;;
+      skills) src_dir="$SKILLS_DIR" ;;
+    esac
+
+    while IFS= read -r src; do
+      rel="${src#$src_dir/}"
+      validate_manifest_relative_path "$rel"
+      hash="$(sha256_file "$src")"
+      printf '%s\t%s\t%s\n' "$root" "$rel" "$hash" >> "$output"
+    done < <(find "$src_dir" -type f -print | LC_ALL=C sort)
+  done
+}
+
+validate_install_manifest() {
+  local path="$1"
+  [[ -f "$path" ]] || {
+    say "No previous managed-file manifest found; existing unlisted files will be preserved."
+    return
+  }
+
+  local duplicates
+  duplicates="$(awk -F '\t' '!/^#/ && NF == 3 { print $1 "\t" $2 }' "$path" | LC_ALL=C sort | uniq -d)"
+  if [[ -n "$duplicates" ]]; then
+    say "Duplicate entries in managed-file manifest $path:" >&2
+    say "$duplicates" >&2
+    return 1
+  fi
+
+  local line_number=0 root rel hash extra
+  while IFS=$'\t' read -r root rel hash extra || [[ -n "$root$rel$hash$extra" ]]; do
+    line_number=$((line_number + 1))
+    [[ -z "$root" || "$root" == \#* ]] && continue
+
+    if [[ -n "$extra" || -z "$rel" || -z "$hash" ]]; then
+      say "Malformed managed-file manifest at $path:$line_number" >&2
+      return 1
+    fi
+    case "$root" in
+      references|agents|skills) ;;
+      *)
+        say "Unknown managed-file root '$root' at $path:$line_number" >&2
+        return 1
+        ;;
+    esac
+    validate_manifest_relative_path "$rel"
+    if [[ ! "$hash" =~ ^[a-fA-F0-9]{64}$ ]]; then
+      say "Invalid SHA-256 at $path:$line_number" >&2
+      return 1
+    fi
+  done < "$path"
+}
+
+manifest_contains_key() {
+  local path="$1"
+  local root="$2"
+  local rel="$3"
+  awk -F '\t' -v root="$root" -v rel="$rel" '
+    $1 == root && $2 == rel { found = 1 }
+    END { exit(found ? 0 : 1) }
+  ' "$path"
+}
+
+verify_managed_files() {
+  local current_manifest="$1"
+  local count
+  count="$(awk -F '\t' '!/^#/ && NF == 3 { count++ } END { print count + 0 }' "$current_manifest")"
+
+  if [[ "$DRY_RUN" == "1" ]]; then
+    say "[dry-run] Would verify $count managed files against repository SHA-256 hashes."
+    return
+  fi
+
+  local root rel expected_hash extra destination actual_hash
+  while IFS=$'\t' read -r root rel expected_hash extra || [[ -n "$root$rel$expected_hash$extra" ]]; do
+    [[ -z "$root" || "$root" == \#* ]] && continue
+    destination="$(destination_for_manifest_entry "$root" "$rel")"
+    if [[ ! -f "$destination" ]]; then
+      say "Managed file was not installed: $destination" >&2
+      return 1
+    fi
+    actual_hash="$(sha256_file "$destination")"
+    if [[ "$actual_hash" != "$expected_hash" ]]; then
+      say "Managed file does not match the repository source: $destination" >&2
+      return 1
+    fi
+  done < "$current_manifest"
+
+  say "OK managed-file content: $count/$count exact SHA-256 matches"
+}
+
+retire_stale_managed_files() {
+  local previous_manifest="$1"
+  local current_manifest="$2"
+  [[ -f "$previous_manifest" ]] || return 0
+
+  local root rel expected_hash extra destination actual_hash
+  while IFS=$'\t' read -r root rel expected_hash extra || [[ -n "$root$rel$expected_hash$extra" ]]; do
+    [[ -z "$root" || "$root" == \#* ]] && continue
+    if manifest_contains_key "$current_manifest" "$root" "$rel"; then
+      continue
+    fi
+
+    destination="$(destination_for_manifest_entry "$root" "$rel")"
+    if [[ ! -f "$destination" ]]; then
+      say "Formerly managed file already absent: $destination"
+      continue
+    fi
+
+    actual_hash="$(sha256_file "$destination")"
+    expected_hash="$(printf '%s' "$expected_hash" | tr '[:upper:]' '[:lower:]')"
+    if [[ "$actual_hash" != "$expected_hash" ]]; then
+      say "Preserving customized formerly managed file: $destination" >&2
+      continue
+    fi
+
+    backup_file "$destination"
+    say "Retiring formerly managed file: $destination"
+    run rm -f -- "$destination"
+  done < "$previous_manifest"
+}
+
+write_install_manifest() {
+  local current_manifest="$1"
+  local destination="$2"
+
+  if [[ -f "$destination" ]] && cmp -s "$current_manifest" "$destination"; then
+    say "Unchanged $destination"
+    return
+  fi
+
+  run mkdir -p "$(dirname "$destination")"
+  backup_file "$destination"
+  say "Writing managed-file manifest: $destination"
+  run cp "$current_manifest" "$destination"
 }
 
 add_or_replace_playbook_section() {
@@ -128,12 +333,6 @@ add_or_replace_playbook_section() {
         return 1
       fi
 
-      backup_file "$target"
-      if [[ "$DRY_RUN" == "1" ]]; then
-        say "[dry-run] Would replace the Codex Agent Playbook section in $target"
-        return
-      fi
-
       newline=$'\n'
       if [[ "$marker_line_ending" == "crlf" ]]; then
         newline=$'\r\n'
@@ -142,15 +341,29 @@ add_or_replace_playbook_section() {
       fi
       section="$start_marker$newline# $title$newline$newline$body$newline$end_marker$newline"
       temp="$(mktemp "${target}.codex-agent-playbook.XXXXXX")"
-      awk -v start="$start_marker" -v end="$end_marker" -v section="$section" '
+      awk -v start="$start_marker" -v end="$end_marker" -v section="$section" -v newline="$newline" '
         {
           line = $0
           sub(/\r$/, "", line)
         }
         line == start { printf "%s", section; in_section = 1; next }
         line == end { in_section = 0; next }
-        !in_section { print }
+        !in_section { printf "%s%s", line, newline }
       ' "$target" > "$temp"
+
+      if cmp -s "$temp" "$target"; then
+        rm -f "$temp"
+        say "Unchanged $target"
+        return
+      fi
+
+      backup_file "$target"
+      if [[ "$DRY_RUN" == "1" ]]; then
+        rm -f "$temp"
+        say "[dry-run] Would replace the Codex Agent Playbook section in $target"
+        return
+      fi
+
       cat "$temp" > "$target"
       rm -f "$temp"
       return
@@ -200,19 +413,21 @@ say "Mode: $MODE"
 say "Repository: $REPO_ROOT"
 say "CODEX_HOME: $CODEX_HOME"
 say "USER_SKILLS_HOME: $USER_SKILLS_HOME"
+say "Managed-file manifest: $MANIFEST_PATH"
 
 if [[ ! -f "$GLOBAL_INSTRUCTIONS" ]]; then
   say "Missing global instructions: $GLOBAL_INSTRUCTIONS" >&2
   exit 1
 fi
 
+CURRENT_MANIFEST="$(mktemp "${TMPDIR:-/tmp}/codex-agent-playbook-manifest.XXXXXX")"
+trap 'rm -f "$CURRENT_MANIFEST"' EXIT
+build_current_manifest "$CURRENT_MANIFEST"
+validate_install_manifest "$MANIFEST_PATH"
+
 if [[ "$MODE" == "full" ]]; then
-  if [[ -f "$TARGET_AGENTS_MD" ]]; then
-    BODY="$(cat "$GLOBAL_INSTRUCTIONS")"
-    add_or_replace_playbook_section "$TARGET_AGENTS_MD" "Codex Agent Playbook Global Instructions" "$BODY"
-  else
-    copy_file "$GLOBAL_INSTRUCTIONS" "$TARGET_AGENTS_MD"
-  fi
+  BODY="$(cat "$GLOBAL_INSTRUCTIONS")"
+  add_or_replace_playbook_section "$TARGET_AGENTS_MD" "Codex Agent Playbook Global Instructions" "$BODY"
 else
   POINTER_BODY='The primary global coding-agent behavior may be configured in Codex Personalization > Custom instructions or in this AGENTS.md file.
 
@@ -255,6 +470,9 @@ fi
 copy_tree "$REFERENCES_DIR" "$CODEX_HOME/references"
 copy_tree "$AGENTS_DIR" "$CODEX_HOME/agents"
 copy_tree "$SKILLS_DIR" "$USER_SKILLS_HOME"
+verify_managed_files "$CURRENT_MANIFEST"
+retire_stale_managed_files "$MANIFEST_PATH" "$CURRENT_MANIFEST"
+write_install_manifest "$CURRENT_MANIFEST" "$MANIFEST_PATH"
 
 say ""
 say "Validation:"

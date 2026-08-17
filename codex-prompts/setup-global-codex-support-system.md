@@ -1,5 +1,7 @@
 # Prompt: Set Up Global Codex Support System
 
+> This is an explicit support-only setup prompt, not a normal installer or updater. For every normal install or update, follow `INSTALL.md` in full mode. Do not select this prompt merely because existing playbook files are present.
+
 Paste this prompt into Codex after you have already added the global coding-agent instructions from `custom-instructions/global-coding-agent-instructions.md` to Codex Personalization > Custom instructions.
 
 ```markdown
@@ -8,6 +10,7 @@ You are configuring my global Codex support system.
 Important context:
 I have already added my full global coding-agent instructions in Codex Personalization > Custom instructions. Treat that as true even if you cannot inspect the UI.
 Do not duplicate those full instructions into `AGENTS.md`.
+This explicit statement is the authorization for support-only behavior. Without it, stop using this prompt and follow `INSTALL.md` in full mode.
 
 Your job is to create the supporting global reference system only:
 

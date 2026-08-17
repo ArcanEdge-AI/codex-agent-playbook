@@ -19,6 +19,7 @@ A full install creates or updates this user-level structure:
 ```text
 $CODEX_HOME/
   AGENTS.md
+  .codex-agent-playbook-managed-files.tsv
   references/
     README.md
     model-routing.md
@@ -62,7 +63,7 @@ Path resolution:
 
 ### Full install
 
-Use this for most users.
+Use this for normal installs and every normal update. It is the default when no mode flag is provided.
 
 Full install:
 
@@ -71,17 +72,22 @@ Full install:
 - copies custom agent definitions into `$CODEX_HOME/agents/`
 - copies skills into `$HOME/.agents/skills/`
 
-If `$CODEX_HOME/AGENTS.md` already exists, preserve it and append a clearly marked Codex Agent Playbook section unless the section is already present.
+The global instruction body is always installed inside one clearly marked Codex Agent Playbook section. Existing content outside that section is preserved. Re-running a full install replaces the existing marked section instead of appending a duplicate.
+
+After a successful run, the installer writes `$CODEX_HOME/.codex-agent-playbook-managed-files.tsv` with every managed support-file path and source SHA-256. On later runs, files removed from the repository are backed up and retired only when they still match the previously installed hash. Customized formerly managed files are preserved and reported. Files that were never recorded as playbook-managed are never removed.
+
+The first manifest-aware update has no previous ownership record, so it safely preserves existing unlisted files. Subsequent updates can distinguish unchanged retired files from user customizations.
 
 ### Support-only install
 
-Use this when the user already pasted the global instructions into Codex Personalization > Custom instructions.
+Use this only when the user explicitly requests support-only mode and confirms that the full global instructions already live in Codex Personalization > Custom instructions. Do not infer support-only mode merely because an older installation or an existing `AGENTS.md` is present.
 
 Support-only install:
 
 - does not duplicate the full global instructions into `$CODEX_HOME/AGENTS.md`
 - adds only a short reference-map pointer if useful
 - still copies reference docs, skills, and custom agent definitions
+- still updates the managed-file manifest and safely retires unchanged files removed from later playbook releases
 
 ## Human Install
 
@@ -124,7 +130,7 @@ When an AI coding agent is asked to install this repo, it should:
 3. Resolve `CODEX_HOME` and `USER_SKILLS_HOME`.
 4. Inspect existing target files before writing.
 5. Back up any existing file before changing it.
-6. Use full install unless the user explicitly asks for support-only mode or the user clearly states the global instructions already live in Codex Personalization.
+6. Use full install for both installation and update unless the user explicitly asks for support-only mode. Existing global instructions, markers, or support files are not permission to change modes.
 7. Copy reference docs, skills, and custom agent definitions to the expected user-level locations.
 8. Validate the installed files.
 9. Report exactly what changed, what was skipped, and where backups were written.
@@ -136,6 +142,7 @@ Do not modify arbitrary repositories during installation. Only use a temporary c
 After installation, verify:
 
 - `$CODEX_HOME/AGENTS.md` exists or was intentionally left as a pointer-only file.
+- `$CODEX_HOME/.codex-agent-playbook-managed-files.tsv` exists and lists every current managed support file once.
 - `$CODEX_HOME/references/model-routing.md` exists.
 - `$CODEX_HOME/references/subagents.md` exists.
 - `$CODEX_HOME/references/worktrees.md` exists.
@@ -162,6 +169,8 @@ After installation, verify:
 - `$HOME/.agents/skills/multi-session-coordination/SKILL.md` exists.
 - Each `SKILL.md` has `name` and `description` frontmatter.
 - TOML agent files are parseable if a TOML parser is available.
+- Every current manifest entry matches its repository source SHA-256.
+- Every formerly managed path was either absent, backed up and retired unchanged, or preserved with an explicit customization warning.
 
 ## Uninstall
 
@@ -171,6 +180,7 @@ To remove it manually, delete:
 
 ```text
 $CODEX_HOME/references/
+$CODEX_HOME/.codex-agent-playbook-managed-files.tsv
 $CODEX_HOME/agents/planner.toml
 $CODEX_HOME/agents/planner-luna.toml
 $CODEX_HOME/agents/engineer.toml

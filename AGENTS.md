@@ -39,6 +39,7 @@ This repo is mostly Markdown and TOML. Before finalizing meaningful changes:
 - Confirm each `SKILL.md` has YAML frontmatter with `name` and `description`.
 - Confirm links and paths in `README.md` match the repository tree.
 - Confirm install docs and scripts reference the current Codex agent files.
+- Confirm PowerShell and Bash installers default normal installs and updates to full mode, create a marked global section on first install, maintain the managed-file manifest, retire only unchanged formerly managed files, and preserve customized or unrelated files.
 - Confirm installer validation lists include `references/worktrees.md`, `references/templates/worktree-manifest.md`, and `skills/worktree-lifecycle/SKILL.md`.
 - Compare generic policy changes with the companion Claude Code playbook and either align them or record the concrete harness-specific reason for divergence.
 - Search the final diff for paths, schemas, model names, and commands that belong to another coding-agent environment; remove any accidental contamination before merging.

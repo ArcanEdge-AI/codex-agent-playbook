@@ -49,12 +49,12 @@ The easiest install path is to give this repo URL to your coding agent:
 ```text
 Install this globally: https://github.com/ArcanEdge-AI/codex-agent-playbook
 
-Follow the repository's INSTALL.md exactly. Preserve my existing instructions, back up anything you change, install the global instructions, references, skills, and custom subagents where supported, then report the installed files and validation results.
+Follow the repository's INSTALL.md exactly. Use full mode even when an older installation exists; do not infer support-only mode unless I explicitly request it. Preserve my existing instructions, back up anything you change, install the global instructions, references, skills, and custom subagents where supported, then report the installed files and validation results.
 ```
 
 That is the intended public experience: users should not need to understand the file layout before installation. The agent should read `INSTALL.md`, clone or fetch the repo, install into user-level Codex/agent configuration locations, validate the result, and report what changed.
 
-For users who already pasted the global instructions into Codex Personalization, use support-only mode:
+Support-only is an explicit pointer-only configuration, not an update mode. Use it only when the user confirms the global instructions already live in Codex Personalization:
 
 ```text
 Install this in support-only mode: https://github.com/ArcanEdge-AI/codex-agent-playbook
@@ -68,7 +68,7 @@ I already added the global custom instructions manually. Follow INSTALL.md, but 
 
 ### Agent install
 
-Ask your coding agent to install the repo URL and follow `INSTALL.md`.
+Ask your coding agent to install the repo URL and follow `INSTALL.md`. Normal installs and updates use full mode.
 
 ### Manual install: macOS / Linux / WSL
 
@@ -177,13 +177,13 @@ The intent is not to make the agent slower for its own sake. The intent is to ma
 
 ### Full install
 
-Use this for most users.
+Use this for normal installs and updates. Full mode is the default and safely replaces the playbook-owned marked section and current managed files.
 
-Full install writes the global instructions into the user's Codex home `AGENTS.md`, then installs references, skills, and custom subagents.
+Full install writes the global instructions into the user's Codex home `AGENTS.md`, installs references, skills, and custom subagents, and records their paths and hashes in a managed-file manifest. Later updates can back up and retire unchanged files removed upstream while preserving customized or unrelated files.
 
 ### Support-only install
 
-Use this when the user already added the global instructions through Codex Personalization → Custom instructions.
+Use this only when the user explicitly says the global instructions already live in Codex Personalization → Custom instructions.
 
 Support-only mode avoids duplicating the full instruction file and installs only the supporting reference docs, skills, and custom subagents.
 
