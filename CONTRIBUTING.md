@@ -6,14 +6,7 @@ This repository is intentionally public and reusable. Contributions should make 
 
 ## What Belongs Here
 
-Good contributions include:
-
-- clearer global coding-agent instructions
-- better subagent delegation guidance
-- reusable reference document templates
-- improved skill definitions
-- corrected custom-agent examples
-- examples that stay generic and easy to adapt
+Good contributions include bug reports, documentation fixes, routing improvements, new skills, agent profiles, evidence-backed benchmark runs, methodology improvements, clearer global coding-agent instructions, reusable reference document templates, and generic examples that are easy to adapt.
 
 ## What Does Not Belong Here
 
@@ -36,6 +29,9 @@ Avoid adding:
 - Use examples that are generic and safe for public reuse.
 - Keep the main-agent orchestration, actual-root-model ceiling, bounded hierarchy, permit, capability-ceiling, and task-local worktree lifecycle model intact.
 - Compare generic policy changes with the companion Claude Code playbook. Align shared behavior or document the concrete harness capability that requires a difference.
+- For routing, skills, and agent-profile changes, explain the task boundary and validation evidence rather than asserting a model choice is universally best.
+- For benchmark contributions, use [`docs/evidence/RUN-TEMPLATE.md`](docs/evidence/RUN-TEMPLATE.md), distinguish public reproduction from private field work, and report missing evidence as missing.
+- Never include secrets, private code, confidential client information, credentials, private logs, or material you do not have permission to publish.
 
 ## Pull Request Checklist
 
@@ -49,6 +45,7 @@ Before opening a PR:
 - Confirm Unix shell scripts remain LF-only.
 - Confirm generic policy changes were compared with the companion Claude Code playbook and any intentional divergence names its harness-specific reason.
 - Confirm no sensitive or private material was added.
+- For evidence or benchmark changes, confirm claims have a reproducible source, a correction/review trail where applicable, and no invented results.
 
 ## License
 

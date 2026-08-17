@@ -5,18 +5,21 @@
 <h1 align="center">Coding Agent Playbook — Codex Edition</h1>
 
 <p align="center">
-  <strong>Installable, managed global instructions, subagents, skills, and engineering workflows for OpenAI Codex.</strong>
+  <strong>Run Codex like an engineering team, not one giant agent.</strong>
 </p>
 
 <p align="center">
-  Configure Codex to behave less like a loose autocomplete engine and more like a disciplined senior engineer: orchestrate subagent execution, plan clearly, coordinate parallel work, verify honestly, and ship maintainable code.
+  An open-source engineering operating model for Codex: installable instructions, model-aware subagents, bounded delegation, independent review, and validation.
 </p>
 
 <p align="center">
   <a href="#install-with-one-prompt">Install</a> ·
+  <a href="#the-operating-model">Operating Model</a> ·
   <a href="#quick-start">Quick Start</a> ·
   <a href="#harness-editions">Harness Editions</a> ·
   <a href="#why-this-exists">Why This Exists</a> ·
+  <a href="#developed-through-real-world-use">Real-World Use</a> ·
+  <a href="#public-evidence">Evidence</a> ·
   <a href="#whats-inside">What's Inside</a> ·
   <a href="#subagent-model">Subagent Model</a> ·
   <a href="#formal-task-graph-orchestration">Task Graphs</a> ·
@@ -61,6 +64,20 @@ Install this in support-only mode: https://github.com/ArcanEdge-AI/coding-agent-
 
 I already added the global custom instructions manually. Follow INSTALL.md, but do not duplicate the full instructions into AGENTS.md. Install references, skills, and custom subagents only.
 ```
+
+---
+
+## The Operating Model
+
+This is more than one large `AGENTS.md` or a generic set of custom instructions. It is a reusable delivery model for real repositories, where local conventions, concurrent work, and incomplete evidence make a single giant context window a weak engineering process: the root agent acts as the senior engineer, while bounded supporting work is routed to an appropriate role and model when the task and available evidence justify it.
+
+The root owns understanding, architecture, decomposition, routing, coordination, integration, acceptance, and final validation. Supporting roles can handle bounded planning, engineering, testing, documentation, and independent review; they do not replace human authority or root accountability. Smaller models are used for clearly scoped work when their capability, the root ceiling, and the evidence required make that appropriate—not as a promise of universal savings.
+
+<p align="center">
+  <img src="./assets/codex-engineering-team.svg" alt="Operating model: a user works through a root senior engineer, bounded supporting roles, root integration, validation, correction, and final result." width="100%" />
+</p>
+
+It installs global instructions, reference docs, reusable skills, and custom subagent profiles where Codex supports them. Try it with the one prompt above, then adapt the repository-level guidance to the codebase in front of you. You may fork, modify, redistribute, and test the approach under the [MIT License](./LICENSE).
 
 ---
 
@@ -155,6 +172,22 @@ Understand → Plan → Implement → Verify → Review → Report
 ```
 
 The intent is not to make the agent slower for its own sake. The intent is to make it **less wrong**, especially on real repositories with existing conventions, local changes, and concurrent work.
+
+---
+
+## Developed Through Real-World Use
+
+The Coding Agent Playbook grew out of ArcanEdge's day-to-day use of coding agents on real software engineering work, not synthetic prompting exercises. ArcanEdge uses these patterns while developing production systems, including work supporting [United Tradesmen](https://www.arcanedge.ai/work/united-tradesmen), a live construction workforce and operations platform, as well as unreleased internal products.
+
+Client and unreleased-product repositories remain private. [ArcanEdge](https://www.arcanedge.ai/) and [United Tradesmen](https://unitedtradesmen.org/) provide the public context; this repository does not publish private source, implementation details, or internal engineering records. The playbook is one part of ArcanEdge's engineering practice, not a claim that AI or this playbook alone built a product.
+
+---
+
+## Public Evidence
+
+Real-world use establishes provenance, but private field evidence is not the public reproducibility layer. [`docs/evidence/`](./docs/evidence/README.md) defines a compact benchmark and run-record format so outside developers can inspect prompts, routing, delegation, review, corrections, validation, and outcomes without needing access to private repositories.
+
+[Benchmark 001](./docs/evidence/BENCHMARK-001.md) is a specification only: its fixture baseline is frozen at [`benchmark-001-baseline-v1`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/tree/benchmark-001-baseline-v1) and [exact commit](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/commit/2a7244f0106cf7f4e106a832b737028144d28389); no measured run has occurred. The evidence framework is designed to make results inspectable; it does not claim universal cost, token, speed, or quality advantages.
 
 ---
 
@@ -396,6 +429,7 @@ references/worktrees.md
 ├── LICENSE
 ├── README.md
 ├── assets/
+│   ├── codex-engineering-team.svg
 │   └── coding-agent-playbook-codex-hero.png
 ├── agents/
 │   ├── docs.toml
@@ -413,6 +447,12 @@ references/worktrees.md
 │   └── setup-global-codex-support-system.md
 ├── custom-instructions/
 │   └── global-coding-agent-instructions.md
+├── docs/
+│   └── evidence/
+│       ├── BENCHMARK-001.md
+│       ├── METHODOLOGY.md
+│       ├── README.md
+│       └── RUN-TEMPLATE.md
 ├── install/
 │   ├── install.ps1
 │   └── install.sh
