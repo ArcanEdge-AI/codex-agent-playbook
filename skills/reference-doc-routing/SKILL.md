@@ -1,6 +1,6 @@
 ---
 name: reference-doc-routing
-description: Use when a task may need architecture, testing, access-control, design-system, API, release, data-model, or subagent reference documents. Helps select relevant docs, classify authority, and pass concise context to subagents.
+description: Use when a task may need architecture, testing, access-control, design-system, API, release, data-model, subagent, or worktree-lifecycle reference documents. Helps select relevant docs, classify authority, and pass concise context to subagents.
 ---
 
 # Reference Doc Routing Skill

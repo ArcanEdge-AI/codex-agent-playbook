@@ -25,6 +25,9 @@ Review the final diff for:
 - performance risk
 - accessibility regressions
 - subagent claims that were not independently verified
+- finite-manifest nodes, root permits, or total-budget use that were not reconciled
+- child model, reasoning effort, permissions, scope, authority, or workspace expansion beyond the parent ceiling
+- task-created auxiliary worktrees without integration evidence and a verified `removed` or exact-blocker `preserved` disposition
 
 Ask:
 

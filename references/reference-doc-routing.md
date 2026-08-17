@@ -17,6 +17,7 @@ Consult reference docs when a task touches:
 - design-system conventions
 - safety requirements
 - release or deployment expectations
+- worktree ownership, isolation, integration, or cleanup
 - known pitfalls
 - recurring mistakes
 - subagent role definitions or review checklists

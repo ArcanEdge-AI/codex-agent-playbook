@@ -39,7 +39,7 @@ status: "planned | in-progress | blocked | integration-ready | merged | abandone
 thread: "Optional thread identifier"
 owner: "Optional responsible agent, person, or team"
 branch: "feature/example"
-base_branch: "main"
+base_branch: "Detected repository default branch"
 worktree_class: "host-managed-primary | user-managed-existing | task-created-auxiliary"
 worktree_path: "Optional canonical path; omit from committed public records when private"
 worktree_permit: "Optional root-issued permit for a task-created auxiliary"
@@ -88,12 +88,13 @@ notes: >-
 - Treat `owned_paths` as write ownership; `shared_paths` identifies coordination surfaces, not permission for concurrent edits.
 - Treat `validation_required` as the handoff and integration gates that must pass before marking work `integration-ready`.
 - Keep the record current while the work remains active.
-- Use repository-relative paths.
+- Use repository-relative paths whenever possible.
 - Keep `thread_title` aligned with the naming standard for newly created threads.
 - Keep task-created auxiliary worktree ownership, integration target, cleanup condition, and final disposition aligned with `references/worktrees.md`.
-- Do not create one worktree per agent. Only the owning root may create, repurpose, or remove an auxiliary worktree.
-- Before task completion, mark every task-created auxiliary `removed` with verification or `preserved` with its exact blocker and next action; do not defer it to scheduled automation.
+- Do not create one worktree per agent. Only the owning root may create, adopt, repurpose, move, or remove an auxiliary worktree.
+- Before task completion, mark every task-created auxiliary `removed` with verification or `preserved` with its exact blocker and next action. Do not defer cleanup to scheduled automation.
+- Detect the repository's actual default branch instead of assuming `main` or `master`.
 - Do not store credentials, tokens, private local paths, or sensitive access material.
-- Do not paste long logs, full transcripts, or unrelated implementation notes.
+- Do not paste full thread transcripts, long logs, or unrelated implementation notes.
 - Mark abandoned work explicitly instead of silently leaving stale records active.
 - Remove or archive the record after the work is merged and no longer affects active coordination.

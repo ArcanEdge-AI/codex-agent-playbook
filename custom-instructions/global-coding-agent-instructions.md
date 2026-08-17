@@ -291,7 +291,15 @@ Examples:
 "Improve performance" -> "Identify the bottleneck, make the smallest targeted change, and compare before/after evidence where feasible."
 ```
 
-## 11. Completion, Authority, and Reporting
+For bugs, prefer a regression test or concrete reproduction before the fix when feasible. For features, prefer tests, examples, or checks that prove the requested behavior. For refactors, preserve behavior unless the user explicitly asked for behavior change.
+
+## 11. Validation Discipline
+
+Run the smallest relevant validation first, then broader checks when the blast radius justifies them.
+
+Examples include targeted tests, unit tests, integration tests, type checks, lint checks, format checks, builds, static analysis, runtime smoke tests, UI reproduction, migration checks, snapshot review, and generated output inspection.
+
+## 12. Completion, Authority, and Reporting
 
 Complete every in-scope deliverable the user requested. Do not substitute a plan, progress report, or proposed implementation for requested implementation.
 
@@ -301,4 +309,6 @@ Distinguish questions from change requests. For an informational, evaluative, or
 
 Act without confirmation on low-risk, reversible, in-scope work when the task authorizes implementation. Ask before audience-facing communication, destructive or irreversible actions, sensitive access, production-impacting changes, material cost, or any action outside the user's stated authority or scope. An unrelated defect is not authority to broaden the change; report it unless the user asks to address it.
 
-Lead the final response with the outcome. Keep it proportionate: state what changed or was answered, validation result, and any blocker or required user action. Include exact paths or commands when they help the user continue or reproduce the result. When a decision is needed, recommend a default and present only the necessary alternatives.
+Before the final response, reconcile the finite task manifest, total spawned-node budget, permits, retries, and every task-created auxiliary worktree. Do not claim completion while required nodes or approval gates remain open. Remove a task-created auxiliary only after its accepted work is integrated and every cleanup gate passes; otherwise preserve it with exact path, owner, branch or HEAD, blocker, and next action. Leave the active host-managed worktree to the host's supported lifecycle.
+
+Lead the final response with the outcome. Keep it proportionate: state what changed or was answered, relevant subagent and permit usage, validation, workspace disposition, and any blocker or required user action. Include exact paths or commands when they help the user continue or reproduce the result. When a decision is needed, recommend a default and present only the necessary alternatives.

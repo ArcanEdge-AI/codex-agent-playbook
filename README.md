@@ -19,6 +19,7 @@
   <a href="#why-this-exists">Why This Exists</a> ·
   <a href="#whats-inside">What's Inside</a> ·
   <a href="#subagent-model">Subagent Model</a> ·
+  <a href="#formal-task-graph-orchestration">Task Graphs</a> ·
   <a href="#task-local-worktree-lifecycle">Worktrees</a> ·
   <a href="#coordinating-parallel-codex-threads">Parallel Threads</a> ·
   <a href="#repository-structure">Structure</a>
