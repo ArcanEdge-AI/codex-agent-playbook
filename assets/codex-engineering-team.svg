@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="codex-engineering-team-title codex-engineering-team-desc">
+  <title id="codex-engineering-team-title">Codex engineering-team operating model</title>
+  <desc id="codex-engineering-team-desc">A user gives work to a root senior engineer and orchestrator, which plans and routes bounded supporting work before integration, validation, correction where needed, and a final result.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#425466"/></marker>
+    <style>.bg{fill:#f8fafc}.node{fill:#fff;stroke:#cbd5e1;stroke-width:2}.accent{fill:#eff6ff;stroke:#2563eb;stroke-width:2.5}.decision{fill:#f0fdf4;stroke:#16a34a;stroke-width:2.5}.label{fill:#172033;font:600 24px Arial,sans-serif;text-anchor:middle}.sub{fill:#425466;font:400 16px Arial,sans-serif;text-anchor:middle}.role{fill:#172033;font:600 16px Arial,sans-serif;text-anchor:middle}.line{fill:none;stroke:#425466;stroke-width:2.5;marker-end:url(#arrow)}</style>
+  </defs>
+  <rect class="bg" width="1200" height="760" rx="24"/>
+  <text x="600" y="44" class="label">Run Codex like an engineering team</text>
+  <rect class="node" x="80" y="96" width="160" height="80" rx="8"/><text x="160" y="144" class="label">User</text>
+  <path class="line" d="M240 136H300"/>
+  <rect class="accent" x="304" y="88" width="320" height="96" rx="8"/><text x="464" y="128" class="label">Root / Senior Engineer</text><text x="464" y="156" class="sub">Owns the engineering problem</text>
+  <path class="line" d="M624 136H684"/>
+  <rect class="node" x="688" y="88" width="336" height="96" rx="8"/><text x="856" y="128" class="label">Plan + Decompose + Route</text><text x="856" y="156" class="sub">Bound ownership and evidence</text>
+  <path class="line" d="M856 184V236"/>
+  <rect class="node" x="192" y="240" width="816" height="128" rx="8"/><text x="600" y="280" class="label">Bounded supporting work</text><text x="336" y="328" class="role">Planner</text><text x="468" y="328" class="role">Engineer</text><text x="600" y="328" class="role">Tester</text><text x="732" y="328" class="role">Reviewer</text><text x="864" y="328" class="role">Docs</text>
+  <text x="600" y="352" class="sub">Roles and models are selected when appropriate.</text>
+  <path class="line" d="M600 368V420"/>
+  <rect class="accent" x="424" y="424" width="352" height="72" rx="8"/><text x="600" y="468" class="label">Root integrates</text>
+  <path class="line" d="M776 460H836"/>
+  <rect class="node" x="840" y="424" width="200" height="72" rx="8"/><text x="940" y="468" class="label">Validation</text>
+  <path class="line" d="M940 496V548"/>
+  <rect class="decision" x="800" y="552" width="280" height="80" rx="8"/><text x="940" y="584" class="label">Accept, reject,</text><text x="940" y="612" class="label">or correct</text>
+  <path class="line" d="M800 592H720V460H776"/>
+  <path class="line" d="M940 632V688"/>
+  <text x="940" y="728" class="label">Final result</text>
+  <text x="600" y="704" class="sub">Routing depends on the root ceiling, task difficulty, and evidence needs.</text>
+</svg>
