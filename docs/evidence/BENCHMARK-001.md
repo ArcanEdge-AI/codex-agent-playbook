@@ -1,6 +1,6 @@
 # Benchmark 001: Scoped Expiring Waivers
 
-**Status:** Specification only. The fixture baseline is frozen at [`benchmark-001-baseline-v1`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/tree/benchmark-001-baseline-v1), commit [`2a7244f0106cf7f4e106a832b737028144d28389`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/commits/2a7244f0106cf7f4e106a832b737028144d28389). No measured run has occurred.
+**Status:** Specification only. The fixture baseline is frozen at [`benchmark-001-baseline-v1`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/tree/benchmark-001-baseline-v1), commit [`2a7244f0106cf7f4e106a832b737028144d28389`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/commit/2a7244f0106cf7f4e106a832b737028144d28389). No measured run has occurred.
 
 ## Fixture
 

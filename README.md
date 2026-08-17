@@ -187,7 +187,7 @@ Client and unreleased-product repositories remain private. [ArcanEdge](https://w
 
 Real-world use establishes provenance, but private field evidence is not the public reproducibility layer. [`docs/evidence/`](./docs/evidence/README.md) defines a compact benchmark and run-record format so outside developers can inspect prompts, routing, delegation, review, corrections, validation, and outcomes without needing access to private repositories.
 
-[Benchmark 001](./docs/evidence/BENCHMARK-001.md) is a specification only: its fixture baseline is frozen at [`benchmark-001-baseline-v1`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/tree/benchmark-001-baseline-v1) and [exact commit](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/commits/2a7244f0106cf7f4e106a832b737028144d28389); no measured run has occurred. The evidence framework is designed to make results inspectable; it does not claim universal cost, token, speed, or quality advantages.
+[Benchmark 001](./docs/evidence/BENCHMARK-001.md) is a specification only: its fixture baseline is frozen at [`benchmark-001-baseline-v1`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/tree/benchmark-001-baseline-v1) and [exact commit](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/commit/2a7244f0106cf7f4e106a832b737028144d28389); no measured run has occurred. The evidence framework is designed to make results inspectable; it does not claim universal cost, token, speed, or quality advantages.
 
 ---
 
