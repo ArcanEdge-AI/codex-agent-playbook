@@ -6,7 +6,7 @@ The intended experience is:
 
 ```text
 Install this repo into my Codex setup:
-https://github.com/ArcanEdge-AI/codex-agent-playbook
+https://github.com/ArcanEdge-AI/coding-agent-playbook-codex
 
 Follow INSTALL.md. Use full install unless I explicitly ask for support-only mode.
 Preserve my existing files with backups and report exactly what changed.
@@ -19,7 +19,7 @@ A full install creates or updates this user-level structure:
 ```text
 $CODEX_HOME/
   AGENTS.md
-  .codex-agent-playbook-managed-files.tsv
+  .coding-agent-playbook-codex-managed-files.tsv
   references/
     README.md
     model-routing.md
@@ -74,7 +74,7 @@ Full install:
 
 The global instruction body is always installed inside one clearly marked Coding Agent Playbook — Codex Edition section. Existing content outside that section is preserved. Re-running a full install replaces the existing marked section instead of appending a duplicate.
 
-After a successful run, the installer writes `$CODEX_HOME/.codex-agent-playbook-managed-files.tsv` with every managed support-file path and source SHA-256. On later runs, files removed from the repository are backed up and retired only when they still match the previously installed hash. Customized formerly managed files are preserved and reported. Files that were never recorded as playbook-managed are never removed.
+After a successful run, the installer writes `$CODEX_HOME/.coding-agent-playbook-codex-managed-files.tsv` with every managed support-file path and source SHA-256. On later runs, files removed from the repository are backed up and retired only when they still match the previously installed hash. Customized formerly managed files are preserved and reported. Files that were never recorded as playbook-managed are never removed. An existing `.codex-agent-playbook-managed-files.tsv` is migrated automatically after a successful update.
 
 The first manifest-aware update has no previous ownership record, so it safely preserves existing unlisted files. Subsequent updates can distinguish unchanged retired files from user customizations.
 
@@ -96,8 +96,8 @@ Clone the repository and run the installer for your shell.
 ### macOS / Linux / WSL
 
 ```bash
-git clone https://github.com/ArcanEdge-AI/codex-agent-playbook.git
-cd codex-agent-playbook
+git clone https://github.com/ArcanEdge-AI/coding-agent-playbook-codex.git
+cd coding-agent-playbook-codex
 bash install/install.sh --full
 ```
 
@@ -110,8 +110,8 @@ bash install/install.sh --support-only
 ### Windows PowerShell
 
 ```powershell
-git clone https://github.com/ArcanEdge-AI/codex-agent-playbook.git
-cd codex-agent-playbook
+git clone https://github.com/ArcanEdge-AI/coding-agent-playbook-codex.git
+cd coding-agent-playbook-codex
 pwsh -ExecutionPolicy Bypass -File install/install.ps1 -Full
 ```
 
@@ -142,7 +142,7 @@ Do not modify arbitrary repositories during installation. Only use a temporary c
 After installation, verify:
 
 - `$CODEX_HOME/AGENTS.md` exists or was intentionally left as a pointer-only file.
-- `$CODEX_HOME/.codex-agent-playbook-managed-files.tsv` exists and lists every current managed support file once.
+- `$CODEX_HOME/.coding-agent-playbook-codex-managed-files.tsv` exists and lists every current managed support file once.
 - `$CODEX_HOME/references/model-routing.md` exists.
 - `$CODEX_HOME/references/subagents.md` exists.
 - `$CODEX_HOME/references/worktrees.md` exists.
@@ -180,7 +180,7 @@ To remove it manually, delete:
 
 ```text
 $CODEX_HOME/references/
-$CODEX_HOME/.codex-agent-playbook-managed-files.tsv
+$CODEX_HOME/.coding-agent-playbook-codex-managed-files.tsv
 $CODEX_HOME/agents/planner.toml
 $CODEX_HOME/agents/planner-luna.toml
 $CODEX_HOME/agents/engineer.toml

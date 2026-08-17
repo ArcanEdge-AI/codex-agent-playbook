@@ -127,7 +127,7 @@ If `$CODEX_HOME/AGENTS.md` already exists:
 - Preserve it.
 - Do not replace it.
 - Do not remove existing guidance.
-- Preserve all user-authored content outside the exact `<!-- codex-agent-playbook:start -->` and `<!-- codex-agent-playbook:end -->` markers.
+- Preserve all user-authored content outside the exact `<!-- coding-agent-playbook-codex:start -->` and `<!-- coding-agent-playbook-codex:end -->` markers. Migrate one valid legacy `codex-agent-playbook` marker pair instead of appending a duplicate section.
 - If exactly one well-ordered marked section exists, create a timestamped backup and replace only that inclusive marked block with the current small reference section; do not leave stale marked content unchanged.
 - If neither marker exists, add the small reference section.
 - If only one marker exists, either marker is duplicated, or the end marker appears before the start marker, stop and report the malformed state without writing the file.
