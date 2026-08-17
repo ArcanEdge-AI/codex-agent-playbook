@@ -1,7 +1,7 @@
-name = "tester"
-description = "Testing-focused Codex subagent for reproducing failures, analyzing test output, finding validation gaps, and recommending targeted checks."
+name = "tester_luna"
+description = "Luna-routed testing-focused Codex subagent for reproducing failures, analyzing test output, finding validation gaps, and recommending targeted checks."
 
-model = "gpt-5.6-terra"
+model = "gpt-5.6-luna"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 

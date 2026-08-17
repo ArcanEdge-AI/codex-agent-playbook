@@ -35,9 +35,9 @@ When a formal task graph exists, each delegated assignment must identify its gra
 
 ## Recursive Delegation
 
-Subagents may locally orchestrate only inside their assigned node. A local child must be equal to or narrower than its parent in goal, inputs, data access, permissions, scope, non-goals, write ownership or isolation, authority, and approval boundary. Each child model and effort must be at or below its parent's explicit ceiling. Explicitly select each child profile, model, and effort; never silently inherit or escalate. A descendant that cannot complete within its ceiling stops and reports the gap; it must not escalate to a stronger model.
+Subagents may locally orchestrate only inside their assigned node. A local child must be equal to or narrower than its parent in goal, inputs, data access, permissions, scope, non-goals, write ownership or isolation, authority, and approval boundary. Each child model rank and effort must be at or below its parent's explicit ceilings. Explicitly select each child profile, model, and effort; never silently inherit or escalate. A descendant that cannot complete within its ceilings stops and reports the gap; it must not escalate to a higher-ranked model.
 
-The root alone issues child-specific permits and expands budget. Depth-1 delegation needs a permit and budget; depth-2 is leaf-only. Retry reuses its node ID and permit. A stronger replacement is a new root-routed depth-1 node within the root task ceiling and consumes a new root permit and budget. Every expansion must record a root reason limited to a newly discovered dependency, an invalidated gate, or changed user scope; a material expansion also requires immediate user approval. Keep payloads to minimum paths and accepted artifacts; reuse accepted outputs and avoid full history, transcripts, and long logs.
+The root alone issues child-specific permits and expands budget. Depth-1 delegation needs a permit and budget; depth-2 is leaf-only. Retry reuses its node ID and permit. A replacement is a new root-routed depth-1 node at any model rank and effort at or below the root task ceilings and consumes a new root permit and budget. It may be stronger than the failed child because it is a new child of root, not a descendant-controlled escalation. Every expansion must record a root reason limited to a newly discovered dependency, an invalidated gate, or changed user scope; a material expansion also requires immediate user approval. Keep payloads to minimum paths and accepted artifacts; reuse accepted outputs and avoid full history, transcripts, and long logs.
 
 ## Mandatory Model Routing
 
@@ -46,10 +46,12 @@ Before spawning a subagent, consult `references/model-routing.md` when available
 - Explicitly select a custom agent profile or model for every delegated task when the environment permits it.
 - Do not rely on parent-model inheritance for routine subagent work.
 - Use the smallest model and lowest reasoning effort likely to complete the bounded task reliably.
-- Prefer the installed `gpt-5.6-terra` profiles for supporting work.
+- Use the canonical model order `gpt-5.6-sol` rank 3, `gpt-5.6-terra` rank 2, and `gpt-5.6-luna` rank 1. Record the actual user-selected root model; never assume Sol.
+- Require every child model rank to be equal to or lower than its parent's rank. Same-tier delegation is valid, and depth does not force a tier drop. Enforce reasoning effort as a separate ceiling.
+- With a Sol root, prefer Terra variants for normal bounded work and Luna variants for cheap work with objective acceptance evidence. With a Terra root, use Terra or Luna. With a Luna root, use Luna only.
 - Keep architecture, security-sensitive judgment, destructive operations, migrations, complex concurrency, and other high-impact decisions with the main orchestrator. Delegate only bounded evidence gathering for those areas, at or below the delegating parent's explicit model and effort ceiling.
 - A subagent must stop and report a capability gap; it must not silently escalate itself or fall back to the main model.
-- Only root may create a stronger same-tier depth-1 replacement within the root task ceiling, using the already-required new root permit and budget; no descendant may create or request a stronger-model escalation.
+- Only root may create a replacement at a model rank and effort within the root task ceilings, using the already-required new root permit and budget; no descendant may create or request a stronger-model escalation.
 
 ## Workflow
 
@@ -79,7 +81,7 @@ Before spawning a subagent, consult `references/model-routing.md` when available
 8. Verify subagent claims against primary evidence. For meaningful implementation, use a separate verification task with only the necessary artifact, criteria, and evidence requirements when the runtime supports it; the main agent still decides acceptance.
 9. If a gate fails, revise or rerun the failed node and any downstream nodes whose inputs became invalid. Do not restart unrelated nodes by default.
 10. Before combining results, confirm every required input passed its designated gate, then inspect the combined diff and run validation for the integrated behavior.
-11. Accept, reject, or revise within the existing ceiling. Only root may create a stronger same-tier depth-1 replacement within the root task ceiling, with a new permit and budget; descendants stop and report rather than escalating themselves.
+11. Accept, reject, or revise within the existing ceilings. Only root may create a depth-1 replacement at any model rank and effort at or below the root task ceilings, with a new permit and budget; descendants stop and report rather than escalating themselves.
 12. Before the final response, remove each task-created auxiliary worktree under the verified cleanup gates or preserve it with its exact owner, path, branch or HEAD, blocker, and next action. Do not defer task-owned cleanup to scheduled automation.
 13. Report relevant subagent usage, concurrency decisions, workspace dispositions, and any escalation in the final response.
 

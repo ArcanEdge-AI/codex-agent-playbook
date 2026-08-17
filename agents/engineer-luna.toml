@@ -1,7 +1,7 @@
-name = "engineer"
-description = "Implementation-focused Codex subagent for bounded, well-scoped code changes after the plan and constraints are clear."
+name = "engineer_luna"
+description = "Luna-routed implementation-focused Codex subagent for bounded, well-scoped code changes after the plan and constraints are clear."
 
-model = "gpt-5.6-terra"
+model = "gpt-5.6-luna"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 

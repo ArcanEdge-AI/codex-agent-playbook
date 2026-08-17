@@ -1,7 +1,7 @@
-name = "planner"
-description = "Planning-focused Codex subagent for decomposing repository tasks, identifying risks, sequencing work, proposing an advisory execution and delegation map, and defining validation strategy."
+name = "planner_luna"
+description = "Luna-routed planning-focused Codex subagent for decomposing repository tasks, identifying risks, sequencing work, proposing an advisory execution and delegation map, and defining validation strategy."
 
-model = "gpt-5.6-terra"
+model = "gpt-5.6-luna"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 

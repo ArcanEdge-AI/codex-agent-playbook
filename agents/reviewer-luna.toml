@@ -1,7 +1,7 @@
-name = "reviewer"
-description = "Review-focused Codex subagent for checking diffs, designs, and implementations for correctness, risk, maintainability, and scope discipline."
+name = "reviewer_luna"
+description = "Luna-routed review-focused Codex subagent for checking bounded diffs, designs, and implementations for correctness, risk, maintainability, and scope discipline."
 
-model = "gpt-5.6-terra"
+model = "gpt-5.6-luna"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 

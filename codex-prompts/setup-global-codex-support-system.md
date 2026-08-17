@@ -81,10 +81,15 @@ $CODEX_HOME/
       task-graph.md
   agents/
     planner.toml
+    planner-luna.toml
     engineer.toml
+    engineer-luna.toml
     reviewer.toml
+    reviewer-luna.toml
     tester.toml
+    tester-luna.toml
     docs.toml
+    docs-luna.toml
 
 $HOME/.agents/skills/
   subagent-orchestration/
@@ -162,10 +167,11 @@ Custom Codex subagents live under the Codex home agents directory:
 - `agents/reviewer.toml`
 - `agents/tester.toml`
 - `agents/docs.toml`
+- `agents/planner-luna.toml`, `agents/engineer-luna.toml`, `agents/reviewer-luna.toml`, `agents/tester-luna.toml`, `agents/docs-luna.toml`
 
 Reference documents are supporting context, not automatic truth. For every repository task when subagents are available, the main agent delegates actual execution to at least one bounded subagent; it remains accountable for orchestration, final diff, validation, acceptance, and final response. Direct main-agent execution is limited to unavailable subagents, an explicit user prohibition, or a specific authority-bound action that cannot be delegated; record the exact exception.
 
-The root owns a finite manifest, total spawned-node budget, and child-specific permits. Every dispatched child must already be a finite-manifest member, fit the remaining total node budget, hold its required root permit, and fit runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Profiles are callable only when the host supports custom-agent invocation, including an `@tag` interface if offered, and are depth 1. A root-permitted depth-1 local orchestrator may create declared depth-2 leaves. Depth 2 executes directly and cannot spawn. For each child, model and reasoning effort must be at or below the explicit ceiling of its parent; descendants cannot upgrade and must stop and report if insufficient. When capacity is full, do not queue speculative descendants.
+The root records the actual user-selected main model, canonical rank, separate reasoning-effort ceiling, finite manifest, total spawned-node budget, and child-specific permits; never assume the root is Sol. Use `gpt-5.6-sol` rank 3 > `gpt-5.6-terra` rank 2 > `gpt-5.6-luna` rank 1. Every dispatched child must already be a finite-manifest member, fit the remaining total node budget, hold its required root permit, and fit runtime, safety, and ownership capacity. Its model rank and effort must be at or below the separate ceilings of its parent; equal-tier children are valid, and depth does not force a tier drop. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Profiles are callable only when the host supports custom-agent invocation, including an `@tag` interface if offered, and are depth 1. A root-permitted depth-1 local orchestrator may create declared depth-2 leaves. Depth 2 executes directly and cannot spawn. Descendants cannot upgrade and must stop and report if their ceilings are insufficient. When capacity is full, do not queue speculative descendants.
 
 The auxiliary-worktree budget starts at zero and is separate from the node budget. Worktrees are not created per agent. Only root may issue a worktree permit or create, adopt, repurpose, move, or remove an auxiliary worktree. Root may authorize one active auxiliary without additional approval; two or more require user approval for the exact count and reasons. Descendants use their exact assigned workspace and report isolation needs upward. Before the final response, root removes each task-created auxiliary under verified safety gates or preserves it with an exact owner, path, branch or HEAD, blocker, and next action. Do not defer task-owned cleanup to scheduled automation. A host-managed active workspace follows the supported host lifecycle.
 ```
@@ -203,12 +209,13 @@ After creating or updating files:
 3. Confirm whether `$CODEX_HOME/AGENTS.override.md` exists and may override `$CODEX_HOME/AGENTS.md`.
 4. Validate TOML custom agent files if a TOML parser is available.
 5. Confirm every installed custom-agent TOML explicitly defines `model` and `model_reasoning_effort`.
-6. Validate that each `SKILL.md` has frontmatter with `name` and `description`.
-7. Confirm `references/model-routing.md`, `references/multi-session-coordination.md`, `references/worktrees.md`, `references/templates/active-work-record.md`, `references/templates/task-graph.md`, `references/templates/worktree-manifest.md`, `skills/task-graph-orchestration/SKILL.md`, `skills/worktree-lifecycle/SKILL.md`, and `skills/multi-session-coordination/SKILL.md` were installed when supported.
-8. Report any files backed up.
-9. Report any files skipped and why.
-10. Report any assumptions.
-11. Report whether the small `AGENTS.md` pointer section was created, updated, already present, or skipped.
+6. Confirm every bundled role has one Terra profile and one Luna profile, and that the model field matches the profile tier.
+7. Validate that each `SKILL.md` has frontmatter with `name` and `description`.
+8. Confirm `references/model-routing.md`, `references/multi-session-coordination.md`, `references/worktrees.md`, `references/templates/active-work-record.md`, `references/templates/task-graph.md`, `references/templates/worktree-manifest.md`, `skills/task-graph-orchestration/SKILL.md`, `skills/worktree-lifecycle/SKILL.md`, and `skills/multi-session-coordination/SKILL.md` were installed when supported.
+9. Report any files backed up.
+10. Report any files skipped and why.
+11. Report any assumptions.
+12. Report whether the small `AGENTS.md` pointer section was created, updated, already present, or skipped.
 
 Final response format:
 

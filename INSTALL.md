@@ -33,10 +33,15 @@ $CODEX_HOME/
       *.md
   agents/
     planner.toml
+    planner-luna.toml
     engineer.toml
+    engineer-luna.toml
     reviewer.toml
+    reviewer-luna.toml
     tester.toml
+    tester-luna.toml
     docs.toml
+    docs-luna.toml
 
 $HOME/.agents/skills/
   subagent-orchestration/SKILL.md
@@ -140,11 +145,17 @@ After installation, verify:
 - `$CODEX_HOME/references/templates/task-graph.md` exists.
 - `$CODEX_HOME/references/templates/worktree-manifest.md` exists.
 - `$CODEX_HOME/agents/planner.toml` exists.
+- `$CODEX_HOME/agents/planner-luna.toml` exists.
 - `$CODEX_HOME/agents/engineer.toml` exists.
+- `$CODEX_HOME/agents/engineer-luna.toml` exists.
 - `$CODEX_HOME/agents/reviewer.toml` exists.
+- `$CODEX_HOME/agents/reviewer-luna.toml` exists.
 - `$CODEX_HOME/agents/tester.toml` exists.
+- `$CODEX_HOME/agents/tester-luna.toml` exists.
 - `$CODEX_HOME/agents/docs.toml` exists.
+- `$CODEX_HOME/agents/docs-luna.toml` exists.
 - Every installed `agents/*.toml` file explicitly defines `model` and `model_reasoning_effort`.
+- Every bundled role has one Terra profile and one Luna profile, and each profile's model field matches its tier.
 - `$HOME/.agents/skills/subagent-orchestration/SKILL.md` exists.
 - `$HOME/.agents/skills/task-graph-orchestration/SKILL.md` exists.
 - `$HOME/.agents/skills/worktree-lifecycle/SKILL.md` exists.
@@ -161,10 +172,15 @@ To remove it manually, delete:
 ```text
 $CODEX_HOME/references/
 $CODEX_HOME/agents/planner.toml
+$CODEX_HOME/agents/planner-luna.toml
 $CODEX_HOME/agents/engineer.toml
+$CODEX_HOME/agents/engineer-luna.toml
 $CODEX_HOME/agents/reviewer.toml
+$CODEX_HOME/agents/reviewer-luna.toml
 $CODEX_HOME/agents/tester.toml
+$CODEX_HOME/agents/tester-luna.toml
 $CODEX_HOME/agents/docs.toml
+$CODEX_HOME/agents/docs-luna.toml
 $HOME/.agents/skills/subagent-orchestration/
 $HOME/.agents/skills/task-graph-orchestration/
 $HOME/.agents/skills/worktree-lifecycle/

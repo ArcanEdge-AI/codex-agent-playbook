@@ -167,7 +167,7 @@ The intent is not to make the agent slower for its own sake. The intent is to ma
 | Prompts | `codex-prompts/` | Setup and active-project coordination prompts. |
 | Reference docs | `references/` | Model routing, subagent delegation, multi-session coordination, document routing, and reusable project-doc templates. |
 | Skills | `skills/` | Reusable workflows for task-graph and subagent orchestration, multi-session coordination, doc routing, and senior review. |
-| Custom agents | `agents/` | Codex subagent definitions for planning, engineering, review, testing, and documentation. |
+| Custom agents | `agents/` | Terra and Luna Codex subagent definitions for planning, engineering, review, testing, and documentation. |
 | Repo guidance | `AGENTS.md` | Instructions for maintaining this public playbook repository. |
 
 ---
@@ -226,7 +226,19 @@ This playbook uses five Codex subagent roles that mirror a practical software de
 | `tester` | Read-mostly | Reproducing failures, analyzing test output, finding validation gaps, and recommending targeted checks. |
 | `docs` | Read-only | Finding, interpreting, and summarizing relevant repo docs, reference docs, and authoritative external documentation. |
 
-The bundled profiles explicitly pin a task-sized supporting model and role-appropriate reasoning effort instead of inheriting the main session model. Consult `references/model-routing.md` for mandatory selection, escalation, and acceptance rules.
+Each role ships with explicit Terra and Luna variants. They pin a task-sized supporting model and role-appropriate reasoning effort instead of inheriting the main session model.
+
+The canonical Codex routing order is:
+
+```text
+gpt-5.6-sol (rank 3) > gpt-5.6-terra (rank 2) > gpt-5.6-luna (rank 1)
+```
+
+The model selected for the main session establishes the root ceiling; never assume it is Sol. A child may use the same or a lower-ranked model than its parent, never a higher-ranked one. Reasoning effort has a separate parent ceiling. Depth controls authority and spawning, not model tier, so a deeper child is not automatically forced down one model tier.
+
+With a Sol root, Terra is the default for normal bounded work and Luna is preferred for cheap work with objective acceptance evidence. With a Terra root, descendants may use Terra or Luna. With a Luna root, descendants must remain on Luna. Consult `references/model-routing.md` for the complete selection, fallback, replacement, and acceptance rules.
+
+The bundle does not duplicate every role as a Sol profile. Sol normally remains the root orchestrator; an exceptional bounded Sol child requires an explicit host-supported model route and a recorded justification.
 
 The delegation rule is simple:
 
@@ -240,7 +252,7 @@ For multi-node work, it also identifies the node, its inputs and accepted output
 
 ### Recursive delegation and token economy
 
-The root owns a finite manifest, total spawned-node budget, and child-specific permits. Every dispatched child must already be a finite-manifest member, fit the remaining total node budget, hold its required root permit, and fit runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Profiles are callable only when the host supports custom-agent invocation, including an `@tag` interface if offered, and are depth 1. A root-permitted depth-1 local orchestrator may create declared depth-2 leaves. Depth 2 executes directly and cannot spawn. For each child, model and reasoning effort must be at or below the explicit ceiling of its parent; descendants cannot upgrade and must stop and report if insufficient. When capacity is full, do not queue speculative descendants. This is instruction-only, not a scheduler.
+The root owns a finite manifest, total spawned-node budget, and child-specific permits. Every dispatched child must already be a finite-manifest member, fit the remaining total node budget, hold its required root permit, and fit runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; a material expansion also needs immediate user approval. Profiles are callable only when the host supports custom-agent invocation, including an `@tag` interface if offered, and are depth 1. A root-permitted depth-1 local orchestrator may create declared depth-2 leaves. Depth 2 executes directly and cannot spawn. Record the actual root model and require each child's canonical model rank and reasoning effort to be at or below its parent's separate ceilings; same-tier children are valid. Descendants cannot upgrade and must stop and report if insufficient. When capacity is full, do not queue speculative descendants. This is instruction-only, not a scheduler.
 
 ---
 
@@ -386,10 +398,15 @@ references/worktrees.md
 │   └── codex-agent-playbook-hero.png
 ├── agents/
 │   ├── docs.toml
+│   ├── docs-luna.toml
 │   ├── engineer.toml
+│   ├── engineer-luna.toml
 │   ├── planner.toml
+│   ├── planner-luna.toml
 │   ├── reviewer.toml
-│   └── tester.toml
+│   ├── reviewer-luna.toml
+│   ├── tester.toml
+│   └── tester-luna.toml
 ├── codex-prompts/
 │   ├── coordinate-active-project-work.md
 │   └── setup-global-codex-support-system.md
@@ -474,7 +491,7 @@ The main agent still decides the design, applies or rejects recommendations, and
 2. Let the installer configure global instructions, references, skills, and subagents.
 3. Add repo-specific AGENTS.md guidance to each project.
 4. Let the main agent frame, route, and coordinate each repository task.
-5. At the root, record the finite manifest, total node budget, and child-specific permits; select host-callable depth-1 profiles, including an `@tag` interface only if offered, with model and reasoning effort at or below the parent explicit ceiling. A permitted depth-1 node may create declared depth-2 leaves, which cannot spawn.
+5. At the root, record the actual main-session model, its canonical rank, the separate reasoning-effort ceiling, finite manifest, total node budget, and child-specific permits. Normally select host-callable depth-1 Terra or Luna role variants, including an `@tag` interface only if offered, whose model rank and effort are at or below the parent's separate ceilings. An exceptional bounded Sol child may instead use an explicit host-supported model route within the root ceilings when the root records the justification. A permitted depth-1 node may create declared depth-2 leaves, which cannot spawn.
 6. For multi-node work, identify real blocking dependencies, parallel-safe nodes, ownership, and verification gates, then dispatch only finite-manifest members that fit the remaining total node budget, hold required root permits, and fit runtime, safety, and ownership capacity. Expand the manifest or budget only for a newly discovered dependency, invalidated gate, or changed user scope; get immediate user approval for a material expansion.
 7. Keep the auxiliary-worktree budget at zero unless root verifies a real isolation need. Before completion, remove each task-created auxiliary worktree safely or preserve it with an exact blocker.
 8. When independent project threads run in parallel, use the multi-session coordination skill.

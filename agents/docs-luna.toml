@@ -1,7 +1,7 @@
-name = "docs"
-description = "Documentation-focused Codex subagent for finding, interpreting, and summarizing repository docs, reference docs, and authoritative external documentation."
+name = "docs_luna"
+description = "Luna-routed documentation-focused Codex subagent for finding, interpreting, and summarizing repository docs, reference docs, and authoritative external documentation."
 
-model = "gpt-5.6-terra"
+model = "gpt-5.6-luna"
 model_reasoning_effort = "low"
 sandbox_mode = "read-only"
 
