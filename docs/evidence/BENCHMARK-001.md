@@ -1,6 +1,6 @@
 # Benchmark 001: Scoped Expiring Waivers
 
-**Status:** Specification only. The fixture baseline is frozen at [`benchmark-001-baseline-v1`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/tree/benchmark-001-baseline-v1), commit [`2a7244f0106cf7f4e106a832b737028144d28389`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/commit/2a7244f0106cf7f4e106a832b737028144d28389). No measured run has occurred.
+**Status:** One measured run is published: [Benchmark 001 Run 001](./BENCHMARK-001-RUN-001.md). The fixture baseline is frozen at [`benchmark-001-baseline-v1`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/tree/benchmark-001-baseline-v1), commit [`2a7244f0106cf7f4e106a832b737028144d28389`](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/commit/2a7244f0106cf7f4e106a832b737028144d28389). The measured implementation is documented in public, open and unmerged [Benchmark PR #1](https://github.com/ArcanEdge-AI/coding-agent-playbook-benchmarks/pull/1).
 
 ## Fixture
 
@@ -26,4 +26,4 @@ The completed change preserves existing behavior when no waiver is supplied; has
 
 ## Reproduction record
 
-Run from the published baseline in a fresh session and record all fields in [RUN-TEMPLATE.md](./RUN-TEMPLATE.md). Do not represent the baseline-authoring session as an independent measured run.
+Run from the published baseline in a fresh session and record all fields in [RUN-TEMPLATE.md](./RUN-TEMPLATE.md). See [Benchmark 001 Run 001](./BENCHMARK-001-RUN-001.md) for the first published measured record. Do not represent the baseline-authoring session as an independent measured run.
