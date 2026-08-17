@@ -287,7 +287,7 @@ function AddOrReplace-PlaybookSection {
       $SecondEndIndex = if ($HasEnd) { $Existing.IndexOf($EndMarker, $EndIndex + $EndMarker.Length, [System.StringComparison]::Ordinal) } else { -1 }
 
       if (-not ($HasStart -and $HasEnd) -or $SecondStartIndex -ge 0 -or $SecondEndIndex -ge 0 -or $EndIndex -lt $StartIndex) {
-        throw "Malformed Codex Agent Playbook markers in $Target; no changes were made."
+        throw "Malformed Coding Agent Playbook — Codex Edition markers in $Target; no changes were made."
       }
 
       $Updated = $Existing.Substring(0, $StartIndex) + $Section + $Existing.Substring($EndIndex + $EndMarker.Length)
@@ -298,7 +298,7 @@ function AddOrReplace-PlaybookSection {
 
       Backup-File $Target
       if ($DryRun) {
-        Write-Step "[dry-run] Would replace the Codex Agent Playbook section in $Target"
+        Write-Step "[dry-run] Would replace the Coding Agent Playbook — Codex Edition section in $Target"
       } else {
         Set-Content -LiteralPath $Target -Value $Updated -Encoding UTF8 -NoNewline
       }
@@ -331,7 +331,7 @@ $ManagedRoots = [ordered]@{
   skills = @{ Source = $SkillsDir; Destination = $UserSkillsHome }
 }
 
-Write-Step "Codex Agent Playbook installer"
+Write-Step "Coding Agent Playbook — Codex Edition installer"
 Write-Step "Mode: $Mode"
 Write-Step "Repository: $RepoRoot"
 Write-Step "CODEX_HOME: $CodexHome"
@@ -351,7 +351,7 @@ if (Test-Path -LiteralPath (Join-Path $CodexHome "AGENTS.override.md") -PathType
 
 if ($Mode -eq "full") {
   $Body = Get-Content -LiteralPath $GlobalInstructions -Raw
-  AddOrReplace-PlaybookSection $TargetAgentsMd "Codex Agent Playbook Global Instructions" $Body
+  AddOrReplace-PlaybookSection $TargetAgentsMd "Coding Agent Playbook — Codex Edition Global Instructions" $Body
 } else {
   $PointerBody = @'
 The primary global coding-agent behavior may be configured in Codex Personalization > Custom instructions or in this AGENTS.md file.

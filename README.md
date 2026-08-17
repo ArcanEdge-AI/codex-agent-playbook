@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="./assets/codex-agent-playbook-hero.png" alt="Codex Agent Playbook hero banner" width="100%" />
+  <img src="./assets/codex-agent-playbook-hero.png" alt="Coding Agent Playbook — Codex Edition hero banner" width="100%" />
 </p>
 
-<h1 align="center">Codex Agent Playbook</h1>
+<h1 align="center">Coding Agent Playbook — Codex Edition</h1>
 
 <p align="center">
-  <strong>Custom instructions, subagents, skills, and reference docs for production-grade AI coding agents.</strong>
+  <strong>Installable, managed global instructions, subagents, skills, and engineering workflows for OpenAI Codex.</strong>
 </p>
 
 <p align="center">
@@ -15,7 +15,7 @@
 <p align="center">
   <a href="#install-with-one-prompt">Install</a> ·
   <a href="#quick-start">Quick Start</a> ·
-  <a href="#related-playbooks">Related Playbooks</a> ·
+  <a href="#harness-editions">Harness Editions</a> ·
   <a href="#why-this-exists">Why This Exists</a> ·
   <a href="#whats-inside">What's Inside</a> ·
   <a href="#subagent-model">Subagent Model</a> ·
@@ -26,18 +26,18 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Codex-Playbook-6E7BFF" alt="Codex Playbook" />
+  <img src="https://img.shields.io/badge/Codex-Edition-6E7BFF" alt="Codex Edition" />
   <img src="https://img.shields.io/badge/Subagents-Orchestrated-00C2FF" alt="Subagents Orchestrated" />
   <img src="https://img.shields.io/badge/Threads-Coordinated-4ECDC4" alt="Threads Coordinated" />
   <img src="https://img.shields.io/badge/Instructions-Tool--Agnostic-8A5CFF" alt="Instructions Tool Agnostic" />
-  <a href="https://github.com/ArcanEdge-AI/claude-code-agent-playbook"><img src="https://img.shields.io/badge/Claude%20Code-Companion-D97706" alt="Claude Code companion playbook" /></a>
+  <a href="https://github.com/ArcanEdge-AI/claude-code-agent-playbook"><img src="https://img.shields.io/badge/Claude%20Code-Edition-D97706" alt="Claude Code Edition" /></a>
   <img src="https://img.shields.io/badge/License-MIT-2ECC71" alt="MIT License" />
   <img src="https://img.shields.io/badge/Status-Active-2ECC71" alt="Status Active" />
 </p>
 
 <p align="center">
   <strong>Using Claude Code instead?</strong>
-  <a href="https://github.com/ArcanEdge-AI/claude-code-agent-playbook">Open the Claude Code Agent Playbook</a>.
+  <a href="https://github.com/ArcanEdge-AI/claude-code-agent-playbook">Open the Claude Code edition</a>.
 </p>
 
 ---
@@ -122,14 +122,14 @@ Then fill in the actual build commands, test commands, architecture rules, gener
 
 ---
 
-## Related Playbooks
+## Harness Editions
 
-This repository is the Codex-focused version of the playbook.
+Coding Agent Playbook ships as separate harness-native editions. This repository is the Codex edition.
 
-| Agent environment | Repository | Use when |
+| Edition | Repository | Use when |
 | --- | --- | --- |
 | Codex | `ArcanEdge-AI/codex-agent-playbook` | You want global Codex custom instructions, reference docs, skills, and subagent definitions. |
-| Claude Code | [`ArcanEdge-AI/claude-code-agent-playbook`](https://github.com/ArcanEdge-AI/claude-code-agent-playbook) | You want the companion setup tuned for Claude Code. |
+| Claude Code | [`ArcanEdge-AI/claude-code-agent-playbook`](https://github.com/ArcanEdge-AI/claude-code-agent-playbook) | You want the harness-native edition tuned for Claude Code. |
 
 The philosophy is shared across both: the main agent acts as the senior engineer/orchestrator, subagents perform bounded evidence-backed execution, independent project threads are coordinated explicitly, and final decisions stay with the main agent.
 

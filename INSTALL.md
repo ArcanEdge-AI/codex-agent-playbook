@@ -1,4 +1,4 @@
-# Install Codex Agent Playbook
+# Install Coding Agent Playbook — Codex Edition
 
 This file is written for both humans and AI coding agents.
 
@@ -72,7 +72,7 @@ Full install:
 - copies custom agent definitions into `$CODEX_HOME/agents/`
 - copies skills into `$HOME/.agents/skills/`
 
-The global instruction body is always installed inside one clearly marked Codex Agent Playbook section. Existing content outside that section is preserved. Re-running a full install replaces the existing marked section instead of appending a duplicate.
+The global instruction body is always installed inside one clearly marked Coding Agent Playbook — Codex Edition section. Existing content outside that section is preserved. Re-running a full install replaces the existing marked section instead of appending a duplicate.
 
 After a successful run, the installer writes `$CODEX_HOME/.codex-agent-playbook-managed-files.tsv` with every managed support-file path and source SHA-256. On later runs, files removed from the repository are backed up and retired only when they still match the previously installed hash. Customized formerly managed files are preserved and reported. Files that were never recorded as playbook-managed are never removed.
 
@@ -199,4 +199,4 @@ $HOME/.agents/skills/reference-doc-routing/
 $HOME/.agents/skills/senior-code-review/
 ```
 
-If you used full install and want to remove the global instructions, edit `$CODEX_HOME/AGENTS.md` and remove the section between the Codex Agent Playbook start/end markers.
+If you used full install and want to remove the global instructions, edit `$CODEX_HOME/AGENTS.md` and remove the section between the Coding Agent Playbook — Codex Edition start/end markers.

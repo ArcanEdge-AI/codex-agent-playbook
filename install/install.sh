@@ -324,12 +324,12 @@ add_or_replace_playbook_section() {
 
     if [[ "$start_count" != "0" || "$end_count" != "0" ]]; then
       if [[ "$start_count" != "1" || "$end_count" != "1" ]]; then
-        say "Malformed Codex Agent Playbook markers in $target; no changes were made." >&2
+        say "Malformed Coding Agent Playbook — Codex Edition markers in $target; no changes were made." >&2
         return 1
       fi
 
       if (( end_line <= start_line )); then
-        say "Malformed Codex Agent Playbook markers in $target; no changes were made." >&2
+        say "Malformed Coding Agent Playbook — Codex Edition markers in $target; no changes were made." >&2
         return 1
       fi
 
@@ -360,7 +360,7 @@ add_or_replace_playbook_section() {
       backup_file "$target"
       if [[ "$DRY_RUN" == "1" ]]; then
         rm -f "$temp"
-        say "[dry-run] Would replace the Codex Agent Playbook section in $target"
+        say "[dry-run] Would replace the Coding Agent Playbook — Codex Edition section in $target"
         return
       fi
 
@@ -408,7 +408,7 @@ AGENTS_DIR="$REPO_ROOT/agents"
 SKILLS_DIR="$REPO_ROOT/skills"
 TARGET_AGENTS_MD="$CODEX_HOME/AGENTS.md"
 
-say "Codex Agent Playbook installer"
+say "Coding Agent Playbook — Codex Edition installer"
 say "Mode: $MODE"
 say "Repository: $REPO_ROOT"
 say "CODEX_HOME: $CODEX_HOME"
@@ -427,7 +427,7 @@ validate_install_manifest "$MANIFEST_PATH"
 
 if [[ "$MODE" == "full" ]]; then
   BODY="$(cat "$GLOBAL_INSTRUCTIONS")"
-  add_or_replace_playbook_section "$TARGET_AGENTS_MD" "Codex Agent Playbook Global Instructions" "$BODY"
+  add_or_replace_playbook_section "$TARGET_AGENTS_MD" "Coding Agent Playbook — Codex Edition Global Instructions" "$BODY"
 else
   POINTER_BODY='The primary global coding-agent behavior may be configured in Codex Personalization > Custom instructions or in this AGENTS.md file.
 

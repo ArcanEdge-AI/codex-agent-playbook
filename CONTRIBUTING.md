@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve Codex Agent Playbook.
+Thanks for helping improve Coding Agent Playbook — Codex Edition.
 
 This repository is intentionally public and reusable. Contributions should make the playbook clearer, more durable, and less tool-specific.
 
